@@ -44,12 +44,6 @@ class Individual():
 
         self.log.debug("Instantiated with genes {}".format(self.gen))
 
-    def set_gene(self, iloc, value):
-        self.gen[iloc] = value
-
-    def get_gene(self, iloc):
-        return self.gen[iloc]
-
     def get_estimates(self):
         return self.bnd[0] + self.gen * (self.bnd[1] - self.bnd[0])
 

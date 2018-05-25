@@ -8,6 +8,7 @@ import numpy as np
 from modestga import metrics
 from modestga import individual
 from modestga import population
+from modestga import operators
 
 logging.basicConfig(filename="test.log", level="DEBUG", filemode="w")
 
@@ -59,11 +60,29 @@ class TestModestga(unittest.TestCase):
 
     def test_population(self):
         pop = population.Population(
-            size=20,
-            bounds=[(0, 10), (0, 10), (0, 10)],
-            fun=self.fun)
+            size=20, bounds=[(0, 10), (0, 10), (0, 10)], fun=self.fun)
 
         self.assertEqual(len(pop.ind), 20)
+
+    def test_operators(self):
+        pop = population.Population(
+            size=2, bounds=[(0, 5) for x in range(100)], fun=self.fun)
+
+        ind1 = pop.ind[0]
+        ind2 = pop.ind[1]
+
+        # Crossover
+        child = operators.crossover(ind1, ind2, uniform=0.5)
+        self.assertTrue((child.gen == ind1.gen).sum() > 30,
+            "Given uniformity=0.5, too few genes from ind1")
+        self.assertTrue((child.gen == ind2.gen).sum() > 30,
+            "Given uniformity=0.5, too few genes from ind2")
+
+        # Mutation
+        pass
+
+        # Tournament
+        pass
 
 
 if __name__ == "__main__":

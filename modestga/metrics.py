@@ -1,5 +1,7 @@
 """
 Distance metrics functions.
+
+TODO:Consider if needed.
 """
 
 import numpy as np
