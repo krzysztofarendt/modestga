@@ -11,7 +11,7 @@ from modestga import population
 
 logging.basicConfig(filename="test.log", level="DEBUG", filemode="w")
 
-class TestEditor(unittest.TestCase):
+class TestModestga(unittest.TestCase):
 
     def setUp(self):
         # Random seed
@@ -53,6 +53,9 @@ class TestEditor(unittest.TestCase):
 
         # Test individual count
         self.assertEqual(ind.count, 2)
+
+        # Test evaluate function
+        self.assertLess(np.abs(ind.evaluate() - 187.5), 1e-8)
 
     def test_population(self):
         pop = population.Population(

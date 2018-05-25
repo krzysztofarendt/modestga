@@ -6,6 +6,7 @@ from modestga.individual import Individual
 class Population():
 
     def __init__(self, size, bounds, fun):
+        self.log = logging.getLogger('Population')
 
         self.ind = list()
 
@@ -13,5 +14,13 @@ class Population():
             self.ind.append(Individual(
                 genes=np.random.rand(len(bounds)),
                 bounds=bounds,
-                fun=fun
-            ))
+                fun=fun)
+            )
+
+        self.log.debug('Instantiated:\n{}'.format(self))
+    
+    def __str__(self):
+        s = ''
+        for i in self.ind:
+            s += '{}\n'.format(i)
+        return s
