@@ -1,3 +1,7 @@
+"""
+Distance metrics functions.
+"""
+
 import numpy as np
 
 

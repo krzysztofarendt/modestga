@@ -1,39 +1,60 @@
 import logging
-import random
-import pandas as pd
 import numpy as np
-import copy
 
 
-class Individudal():
+def bounds_tuples_to_array(t):
+    """
+    Convert a list of tuples with bounds into an array with the first
+    dimension for lower bounds and the second for upper bounds.
+    """
+    a = np.array([
+        [b[0] for b in t],
+        [b[1] for b in t]
+    ])
+    return a
 
-    def __init__(self, x, pop, genes, cfun):
-        self.x = x
-        self.pop = pop
-        self.genes = genes
-        self.cfun = cfun
 
-    def calculate(self):
-        pass
+def bounds_array_to_tuples(a):
+    """
+    Inversed conversion to `bounds_tuples_to_array()`.
+    """
+    t = [(lo, hi) for lo, hi in zip(a[0], a[1])]
+    return t
 
-    def reset(self):
-        pass
 
-    def set_gene(self, name, value):
-        pass
+class Individual():
 
-    def get_gene(self, name):
-        pass
+    # Total number of instances
+    count = 0
+
+    def __init__(self, genes, bounds, fun):
+        """
+        :param bounds: list of tuples, parameter bounds (min, max)
+        :param fun: function to be minimized
+        :param genes: 1D array, floats between 0 and 1 (inclusive)
+        """
+        self.log = logging.getLogger(name="Individual #{}".format(Individual.count))
+        Individual.count += 1
+
+        self.gen = np.array(genes)
+        self.fun = fun
+        self.bnd = bounds_tuples_to_array(bounds)
+
+        self.log.debug("Instantiated with genes {}".format(self.gen))
+
+    def set_gene(self, iloc, value):
+        self.gen[iloc] = value
+
+    def get_gene(self, iloc):
+        return self.gen[iloc]
 
     def get_estimates(self):
-        pass
-
-    def get_error(self):
-        pass
+        return self.bnd[0] + self.gen * (self.bnd[1] - self.bnd[0])
 
     def copy(self):
-        pass
-
-    @staticmethod
-    def _get_random_genes(self):
-        pass
+        ind = Individual(
+            self.gen,
+            bounds_array_to_tuples(self.bnd),
+            self.fun
+        )
+        return ind
