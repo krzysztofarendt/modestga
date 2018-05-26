@@ -33,14 +33,19 @@ class Individual():
         :param fun: function to be minimized
         :param genes: 1D array, floats between 0 and 1 (inclusive)
         """
+        # Set name
         self.id = 'Ind#{}'.format(Individual.count)
         self.log = logging.getLogger(name=self.id)
         Individual.count += 1
 
+        # Copy arguments
         self.gen = np.array(genes)
         self.fun = fun
         self.args = args
         self.bnd = bounds_tuples_to_array(bounds)
+
+        # Evaluate and save score
+        self.val = self.evaluate()
 
         self.log.debug("Instantiated with genes {}".format(self.gen))
 

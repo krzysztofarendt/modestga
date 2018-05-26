@@ -82,7 +82,19 @@ class TestModestga(unittest.TestCase):
         pass
 
         # Tournament
-        pass
+        popsize = 50
+        pop = population.Population(
+            size=popsize, bounds=[(0, 5) for x in range(5)], fun=self.fun)
+
+        t1, t2 = operators.tournament(pop, popsize)
+        self.assertEqual(t1.id, t2.id,
+            "Tournament size equal to population size, "
+            "yet two different individuals selected")
+
+        t1, t2 = operators.tournament(pop, 10)
+        self.assertNotEqual(t1.id, t2.id,
+            "Small tournament size, so two different individuals "
+            "should be returned (at least with the current random seed)")
 
 
 if __name__ == "__main__":
