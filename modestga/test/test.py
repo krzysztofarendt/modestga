@@ -65,13 +65,12 @@ class TestModestga(unittest.TestCase):
         self.assertEqual(len(pop.ind), 20)
 
     def test_operators(self):
+        # Crossover
         pop = population.Population(
-            size=2, bounds=[(0, 5) for x in range(100)], fun=self.fun)
-
+            size=2, bounds=[(0, 5) for x in range(100)], fun=self.fun
+        )
         ind1 = pop.ind[0]
         ind2 = pop.ind[1]
-
-        # Crossover
         child = operators.crossover(ind1, ind2, uniform=0.5)
         self.assertTrue((child.gen == ind1.gen).sum() > 30,
             "Given uniformity=0.5, too few genes from ind1")
@@ -79,12 +78,22 @@ class TestModestga(unittest.TestCase):
             "Given uniformity=0.5, too few genes from ind2")
 
         # Mutation
-        pass
+        pop = population.Population(
+            size=1, bounds=[(0, 5) for x in range(10)], fun=self.fun
+        )
+        ind = pop.ind[0]
+        mut1 = operators.mutation(ind, rate=0.5, dist=None)
+        mut2 = operators.mutation(ind, rate=0.5, dist=1)
+        print(ind)
+        print(mut1)
+        print(mut2)
+        input('...')
 
         # Tournament
         popsize = 50
         pop = population.Population(
-            size=popsize, bounds=[(0, 5) for x in range(5)], fun=self.fun)
+            size=popsize, bounds=[(0, 5) for x in range(5)], fun=self.fun
+        )
 
         t1, t2 = operators.tournament(pop, popsize)
         self.assertEqual(t1.id, t2.id,
