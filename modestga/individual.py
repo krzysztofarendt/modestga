@@ -18,7 +18,7 @@ def bounds_array_to_tuples(a):
     """
     Inversed conversion to `bounds_tuples_to_array()`.
     """
-    t = [(lo, hi) for lo, hi in zip(a[0], a[1])]
+    t = tuple([(lo, hi) for lo, hi in zip(a[0], a[1])])
     return t
 
 
@@ -29,7 +29,7 @@ class Individual():
 
     def __init__(self, genes, bounds, fun, args=()):
         """
-        :param bounds: list of tuples, parameter bounds (min, max)
+        :param bounds: tuple of tuples, parameter bounds (min, max)
         :param fun: function to be minimized
         :param genes: 1D array, floats between 0 and 1 (inclusive)
         """
