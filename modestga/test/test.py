@@ -9,6 +9,7 @@ from modestga import metrics
 from modestga import individual
 from modestga import population
 from modestga import operators
+from modestga import ga
 
 logging.basicConfig(filename="test.log", level="DEBUG", filemode="w")
 
@@ -108,6 +109,16 @@ class TestModestga(unittest.TestCase):
             "Small tournament size, so two different individuals "
             "should be returned (at least with the current random seed)")
 
+    def test_ga(self):
+        # Test norm(), denorm()
+        x = [0, 2.5, 7.5, 10]
+        bounds = tuple([(0, 10) for i in x])
+        n = ga.norm(x, bounds)
+        d = ga.denorm(n, bounds)
+        self.assertTrue(((d - x) < 1e-12).all())
+        self.assertTrue(((n - np.array([0, 0.25, 0.75, 1.0])) < 1e-12).all())
+
+        # 
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

@@ -29,9 +29,9 @@ class Individual():
 
     def __init__(self, genes, bounds, fun, args=()):
         """
+        :param genes: 1D array, floats between 0 and 1 (inclusive)
         :param bounds: tuple of tuples, parameter bounds (min, max)
         :param fun: function to be minimized
-        :param genes: 1D array, floats between 0 and 1 (inclusive)
         """
         # Set name
         self.id = 'Ind#{}'.format(Individual.count)
