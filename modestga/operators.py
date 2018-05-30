@@ -49,7 +49,7 @@ def mutation(ind, rate, dist=None):
 
     if dist is not None:
         mut = np.where(
-            mut > 0.5,
+            mut < rate,
             np.maximum(
                 np.minimum(
                     ind.gen + dist * random.random(),
@@ -60,7 +60,7 @@ def mutation(ind, rate, dist=None):
             ind.gen
         )
     else:
-        mut = np.where(mut > 0.5, random.random(), ind.gen)
+        mut = np.where(mut < rate, random.random(), ind.gen)
 
     mutind = ind.copy()
     mutind.gen = mut

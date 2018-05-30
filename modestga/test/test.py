@@ -82,12 +82,15 @@ class TestModestga(unittest.TestCase):
             size=1, bounds=[(0, 5) for x in range(10)], fun=self.fun
         )
         ind = pop.ind[0]
-        mut1 = operators.mutation(ind, rate=0.5, dist=None)
-        mut2 = operators.mutation(ind, rate=0.5, dist=1)
-        print(ind)
-        print(mut1)
-        print(mut2)
-        input('...')
+        mut1 = operators.mutation(ind, rate=0.5, dist=None) # mutate some randomly
+        mut2 = operators.mutation(ind, rate=0.5, dist=0.01) # mutate some a bit
+        mut3 = operators.mutation(ind, rate=1.0, dist=None) # mutate all randomly
+        mut4 = operators.mutation(ind, rate=0.0, dist=None) # mutate none
+        self.assertTrue((mut1.gen == ind.gen).sum() > 0)
+        self.assertTrue((np.abs(mut2.gen - ind.gen) <= 0.01).all())
+        self.assertTrue((mut3.gen != ind.gen).all())
+        self.assertFalse((np.abs(mut3.gen - ind.gen) <= 0.01).all())
+        self.assertTrue((mut4.gen == ind.gen).all())
 
         # Tournament
         popsize = 50
