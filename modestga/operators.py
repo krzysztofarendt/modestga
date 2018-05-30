@@ -24,6 +24,7 @@ def tournament(pop, size):
 
     return group1[fit1], group2[fit2]
 
+
 def mutation(ind, rate, dist=None):
     """
     Mutate genes within the distance `dist`. `rate` controls
@@ -65,4 +66,3 @@ def mutation(ind, rate, dist=None):
     mutind = ind.copy()
     mutind.gen = mut
     return mutind
-
