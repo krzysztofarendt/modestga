@@ -53,6 +53,12 @@ class Individual():
         return self.bnd[0] + self.gen * (self.bnd[1] - self.bnd[0])
 
     def evaluate(self):
+        """
+        Evaluate cost function.
+
+        Instead of calling this method,
+        you may read the instance attribute `val`.
+        """
         return self.fun(self.get_estimates(), *self.args)
 
     def copy(self):
@@ -64,5 +70,5 @@ class Individual():
         return ind
 
     def __str__(self):
-        s = '{}: {}'.format(self.id, self.gen)
+        s = '{}: {} -> {}'.format(self.id, self.gen, self.val)
         return s

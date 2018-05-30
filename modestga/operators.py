@@ -4,6 +4,8 @@ import numpy as np
 
 
 def crossover(ind1, ind2, uniform=0.5):
+    log = logging.getLogger('crossover')
+    log.debug("{} x {}".format(ind1.id, ind2.id))
     child = ind1.copy()
 
     for i in range(ind2.gen.size):
@@ -14,6 +16,8 @@ def crossover(ind1, ind2, uniform=0.5):
 
 
 def tournament(pop, size):
+    log = logging.getLogger('tournament')
+
     # Form groups
     group1 = np.random.choice(pop.ind, size=size, replace=False)
     group2 = np.random.choice(pop.ind, size=size, replace=False)
@@ -22,7 +26,12 @@ def tournament(pop, size):
     fit1 = np.argmin([x.val for x in group1])
     fit2 = np.argmin([x.val for x in group2])
 
-    return group1[fit1], group2[fit2]
+    i1 = group1[fit1]
+    i2 = group2[fit2]
+
+    log.debug("{}, {}".format(i1.id, i2.id))
+
+    return i1, i2
 
 
 def mutation(ind, rate, dist=None):
@@ -46,6 +55,9 @@ def mutation(ind, rate, dist=None):
     :param dist: float (0-1) or None, mutation distance
     :return: mutated Individual (copy)
     """
+    log = logging.getLogger('mutation')
+    log.debug('{}'.format(ind.id))
+
     mut = np.random.rand(ind.gen.size)
 
     if dist is not None:

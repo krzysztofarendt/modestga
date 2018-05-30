@@ -50,18 +50,23 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
     :param x0: numpy 1D array, initial parameters
     :param args: tuple, positional arguments to be passed to `fun`
     :param callback: function, called after every generation (TODO)
-    :param options: dict, GA options (TODO)
+    :param options: dict, GA options
     :return: (TODO)
     """
+    np.set_printoptions(precision=3)
+
     log = logging.getLogger(name='minimize')
     log.info('Start minimization')
+
     opts = {
-        'generations': 100,
-        'pop_size': 100,
-        'mut_rate': 0.05,
-        'mut_dist': None,
-        'trm_size': 10,
-        'tol': 1e-6
+        'generations': 100,     # Max. number of generations
+        'pop_size': 100,        # Population size
+        'mut_rate': 0.05,       # Mutation rate
+        'mut_dist': None,       # Mutation distance
+        'trm_size': 10,         # Tournament size
+        'tol': 1e-6,            # Solution tolerance (TODO)
+        'inertia': 10,          # Max. number of non-improving generations (TODO)
+        'xover_ratio': 0.5      # Crossover ratio
     }
 
     for k in options:
@@ -78,18 +83,74 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
 
     # Add user guess if present
     if x0 is not None:
+        log.debug('Using initial guess x0={}'.format(x0))
         pop.ind[0] = individual.Individual(
             genes=norm(x0, bounds),
             bounds=bounds,
             fun=fun,
             args=args
         )
+        log.info('Individual based on x0:\n{}'.format(pop.ind[0]))
+
+    log.info('Initial population:\n{}'.format(pop))
 
     # Loop over generations
     for gi in range(opts['generations']):
-        pass
 
-    return None
+        # Initialize children
+        children = list()
+        log.debug('Initiaze new children')
+
+        # Elitism
+        children.append(pop.get_fittest())
+        log.debug('Elitism, add {}'.format(children[0]))
+
+        # Fill other slots with children
+        while len(children) < len(pop.ind):
+            #Cross-over
+            i1, i2 = operators.tournament(pop, opts['trm_size'])
+            child = operators.crossover(i1, i2, opts['xover_ratio'])
+
+            # Mutation
+            child = operators.mutation(
+                child, opts['mut_rate'], opts['mut_dist']
+            )
+
+            children.append(child)
+        
+        # Update population with new individuals
+        pop.ind = children
+
+        log.info('Generation {}:\n{}'.format(gi, pop))
+
+    # Optimization result
+    class OptRes:
+        def __init__(self, x, success, message, ng, fun):
+            self.x = x
+            self.success = success
+            self.message = message
+            self.ng = ng
+            self.fun = fun
+        
+        def __str__(self):
+            s = "Optimization result:\n"
+            s += "====================\n"
+            s += "x = {}\n".format(self.x)
+            s += "success = {}\n".format(self.success)
+            s += "message = {}\n".format(self.message)
+            s += "ng = {}\n".format(self.ng)
+            s += "fun = {}\n".format(self.fun)
+            return s
+
+    res = OptRes(
+        x = pop.get_fittest().get_estimates(),
+        success = True,
+        message = "Exit message not defined yet",
+        ng = None,
+        fun = pop.get_fittest().val
+    )
+
+    return res
 
 
 if __name__ == "__main__":
@@ -99,9 +160,9 @@ if __name__ == "__main__":
     def f(x):
         return np.sum(x ** 2)
 
-    bounds = ((0, 10), (0, 10), (0, 10))
-    options = {'generations': 10, 'pop_size': 5, 'tol': 1e-6}
+    bounds = ((0, 10), (0, 10), (0, 10), (0, 10), (0, 10))
+    options = {'tol': 1e-6}
 
-    opt = minimize(f, bounds, options=options)
+    res = minimize(f, bounds, options=options)
 
-    print(opt)
+    print(res)

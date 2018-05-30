@@ -18,7 +18,21 @@ class Population():
             )
 
         self.log.debug('Instantiated:\n{}'.format(self))
-    
+
+    def get_fittest(self):
+        fittest = None
+        min_fun = None
+
+        for i in self.ind:
+            if min_fun is None:
+                min_fun = i.val
+                fittest = i
+            elif i.val < min_fun:
+                min_fun = i.val
+                fittest = i
+
+        return fittest
+
     def __str__(self):
         s = ''
         for i in self.ind:

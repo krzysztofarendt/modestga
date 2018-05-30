@@ -65,6 +65,12 @@ class TestModestga(unittest.TestCase):
 
         self.assertEqual(len(pop.ind), 20)
 
+        # Get fittest
+        fittest = pop.get_fittest()
+        for i in pop.ind:
+            self.assertTrue(fittest.val <= i.val)
+
+
     def test_operators(self):
         # Crossover
         pop = population.Population(
