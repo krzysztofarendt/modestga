@@ -34,47 +34,20 @@ def tournament(pop, size):
     return i1, i2
 
 
-def mutation(ind, rate, dist=None):
+def mutation(ind, rate):
     """
-    Mutate genes within the distance `dist`. `rate` controls
-    how many genes are mutated. Mutated genes cannot exceed
-    the bounds (0-1). `dist` is adviced to be either very small,
-    or `None`. The equation used to calculated a new gene is:
-
-    if dist is not None:
-        new = old + dist * random
-    else:
-        new = random
-
-    In the first case, `new` is trimmed to stay within 0 and 1.
-    In result, the boundaries are "sticky" (more probable to 
-    reach the closer boundary than stay in the middle).
+    Mutate genes. `rate` controls how many genes are mutated.
 
     :param ind: Individual
     :param rate: float (0-1), mutation rate
-    :param dist: float (0-1) or None, mutation distance
     :return: mutated Individual (copy)
     """
     log = logging.getLogger('mutation')
     log.debug('{}'.format(ind.id))
 
     mut = np.random.rand(ind.gen.size)
-
-    if dist is not None:
-        mut = np.where(
-            mut < rate,
-            np.maximum(
-                np.minimum(
-                    ind.gen + dist * random.random(),
-                    1.
-                ),
-                0.
-            ),
-            ind.gen
-        )
-    else:
-        mut = np.where(mut < rate, random.random(), ind.gen)
+    mut = np.where(mut < rate, random.random(), ind.gen)
 
     mutind = ind.copy()
-    mutind.gen = mut
+    mutind.set_genes(mut)
     return mutind

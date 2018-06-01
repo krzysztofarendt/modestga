@@ -62,10 +62,9 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
         'generations': 100,     # Max. number of generations
         'pop_size': 100,        # Population size
         'mut_rate': 0.05,       # Mutation rate
-        'mut_dist': None,       # Mutation distance
         'trm_size': 10,         # Tournament size
         'tol': 1e-6,            # Solution tolerance
-        'inertia': 10,          # Max. number of non-improving generations (TODO)
+        'inertia': 10,          # Max. number of non-improving generations
         'xover_ratio': 0.5      # Crossover ratio
     }
 
@@ -83,6 +82,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
 
     # Add user guess if present
     if x0 is not None:
+        x0 = np.array(x0)
         log.debug('Using initial guess x0={}'.format(x0))
         pop.ind[0] = individual.Individual(
             genes=norm(x0, bounds),
@@ -120,7 +120,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
 
             # Mutation
             child = operators.mutation(
-                child, opts['mut_rate'], opts['mut_dist']
+                child, opts['mut_rate']
             )
 
             children.append(child)
@@ -131,13 +131,14 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
         log.info('Generation {}:\n{}'.format(gi, pop))
 
         # Tolerance check
+        fittest = pop.get_fittest()
         if vprev is None:
-            vprev = pop.get_fittest().val
-        elif abs(vprev - pop.get_fittest().val < opts['tol']):
-            vprev = pop.get_fittest().val
+            vprev = fittest.val
+        elif abs(vprev - fittest.val < opts['tol']):
+            vprev = fittest.val
             nstalled += 1
         else:
-            vprev = pop.get_fittest().val
+            vprev = fittest.val
             nstalled = 0
 
         # Break if stalled
@@ -158,6 +159,8 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
         message = exitmsg,
         fun = pop.get_fittest().val
     )
+
+    log.info(res)
 
     return res
 
@@ -196,8 +199,24 @@ if __name__ == "__main__":
         return np.sum(x ** 2)
 
     bounds = ((0, 10), (0, 10), (0, 10), (0, 10), (0, 10))
-    options = {'tol': 1e-12, 'inertia': 25}
 
+    # Mutation distance = None
+    # Mutation rate = 0.05
+    options = {
+        'tol': 1e-6,
+        'inertia': 10,
+        'mut_rate': 0.05,
+    }
     res = minimize(f, bounds, options=options)
-
     print(res)
+
+    # Mutation distance = 0.01
+    # Mutation rate = 0.5
+    options = {
+        'tol': 1e-6,
+        'inertia': 10,
+        'mut_rate': 0.99,
+    }
+    res = minimize(f, bounds, x0=res.x, options=options)
+    print(res)
+

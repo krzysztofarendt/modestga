@@ -11,7 +11,7 @@ from modestga import population
 from modestga import operators
 from modestga import ga
 
-logging.basicConfig(filename="test.log", level="DEBUG", filemode="w")
+logging.basicConfig(filename="test.log", level="INFO", filemode="w")
 
 class TestModestga(unittest.TestCase):
 
@@ -19,18 +19,13 @@ class TestModestga(unittest.TestCase):
         # Random seed
         random.seed(123)
         np.random.seed(123)
-        # Temporary directory
-        self.tempdir = tempfile.mkdtemp()
-        print("Temp dir created: {}".format(self.tempdir))
         # Cost function
         def f(x):
-            return np.sum(x ** 2)
+            return np.sum(np.array(x) ** 2)
         self.fun = f
 
     def tearDown(self):
-        shutil.rmtree(self.tempdir)
-        assert not os.path.exists(self.tempdir)
-        print("Temp dir removed: {}".format(self.tempdir))
+        pass
 
     def test_metrics(self):
         y1 = np.arange(10)
@@ -53,9 +48,6 @@ class TestModestga(unittest.TestCase):
         self.assertTrue((ind.gen == ind_copy.gen).all(), "Genes equality failed")
         self.assertTrue((ind.bnd == ind_copy.bnd).all(), "Bounds equality failed")
 
-        # Test individual count
-        self.assertEqual(ind.count, 2)
-
         # Test evaluate function
         self.assertLess(np.abs(ind.evaluate() - 187.5), 1e-8)
 
@@ -70,6 +62,8 @@ class TestModestga(unittest.TestCase):
         for i in pop.ind:
             self.assertTrue(fittest.val <= i.val)
 
+        fval = self.fun(pop.get_fittest().get_estimates())
+        self.assertTrue(fittest.val == fval)
 
     def test_operators(self):
         # Crossover
@@ -86,18 +80,15 @@ class TestModestga(unittest.TestCase):
 
         # Mutation
         pop = population.Population(
-            size=1, bounds=[(0, 5) for x in range(10)], fun=self.fun
+            size=1, bounds=[(0, 5) for x in range(100)], fun=self.fun
         )
         ind = pop.ind[0]
-        mut1 = operators.mutation(ind, rate=0.5, dist=None) # mutate some randomly
-        mut2 = operators.mutation(ind, rate=0.5, dist=0.01) # mutate some a bit
-        mut3 = operators.mutation(ind, rate=1.0, dist=None) # mutate all randomly
-        mut4 = operators.mutation(ind, rate=0.0, dist=None) # mutate none
+        mut1 = operators.mutation(ind, rate=0.5) # mutate some randomly
+        mut2 = operators.mutation(ind, rate=1.0) # mutate all randomly
+        mut3 = operators.mutation(ind, rate=0.0) # mutate none
         self.assertTrue((mut1.gen == ind.gen).sum() > 0)
-        self.assertTrue((np.abs(mut2.gen - ind.gen) <= 0.01).all())
-        self.assertTrue((mut3.gen != ind.gen).all())
-        self.assertFalse((np.abs(mut3.gen - ind.gen) <= 0.01).all())
-        self.assertTrue((mut4.gen == ind.gen).all())
+        self.assertTrue((mut2.gen != ind.gen).all())
+        self.assertTrue((mut3.gen == ind.gen).all())
 
         # Tournament
         popsize = 50
@@ -121,10 +112,22 @@ class TestModestga(unittest.TestCase):
         bounds = tuple([(0, 10) for i in x])
         n = ga.norm(x, bounds)
         d = ga.denorm(n, bounds)
-        self.assertTrue(((d - x) < 1e-12).all())
-        self.assertTrue(((n - np.array([0, 0.25, 0.75, 1.0])) < 1e-12).all())
+        self.assertTrue((np.abs(d - x) < 1e-12).all())
+        self.assertTrue((np.abs(n - np.array([0, 0.25, 0.75, 1.0])) < 1e-12).all())
 
-        # 
+        # Test x0 and elitism
+        options = {'generations': 10, 'mut_rate': 0.25}
+        opt1 = ga.minimize(self.fun, bounds, options=options)
+        self.assertEqual(opt1.fun, self.fun(opt1.x))
+
+        options = {'generations': 10, 'mut_rate': 0.25}
+        x0 = opt1.x
+        opt2 = ga.minimize(self.fun, bounds, x0=x0, options=options)
+        self.assertEqual(opt2.fun, self.fun(opt2.x))
+        self.assertLessEqual(opt2.fun, opt1.fun)
+
+
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
