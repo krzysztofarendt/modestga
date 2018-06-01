@@ -51,7 +51,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
     :param args: tuple, positional arguments to be passed to `fun`
     :param callback: function, called after every generation (TODO)
     :param options: dict, GA options
-    :return: (TODO)
+    :return: OptRes, optimization result
     """
     np.set_printoptions(precision=3)
 
@@ -64,7 +64,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
         'mut_rate': 0.05,       # Mutation rate
         'mut_dist': None,       # Mutation distance
         'trm_size': 10,         # Tournament size
-        'tol': 1e-6,            # Solution tolerance (TODO)
+        'tol': 1e-6,            # Solution tolerance
         'inertia': 10,          # Max. number of non-improving generations (TODO)
         'xover_ratio': 0.5      # Crossover ratio
     }
@@ -95,7 +95,14 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
     log.info('Initial population:\n{}'.format(pop))
 
     # Loop over generations
+    ng = 0
+    nstalled = 0
+    vprev = None
+    exitmsg = None
+
     for gi in range(opts['generations']):
+
+        ng += 1
 
         # Initialize children
         children = list()
@@ -123,34 +130,62 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
 
         log.info('Generation {}:\n{}'.format(gi, pop))
 
-    # Optimization result
-    class OptRes:
-        def __init__(self, x, success, message, ng, fun):
-            self.x = x
-            self.success = success
-            self.message = message
-            self.ng = ng
-            self.fun = fun
-        
-        def __str__(self):
-            s = "Optimization result:\n"
-            s += "====================\n"
-            s += "x = {}\n".format(self.x)
-            s += "success = {}\n".format(self.success)
-            s += "message = {}\n".format(self.message)
-            s += "ng = {}\n".format(self.ng)
-            s += "fun = {}\n".format(self.fun)
-            return s
+        # Tolerance check
+        if vprev is None:
+            vprev = pop.get_fittest().val
+        elif abs(vprev - pop.get_fittest().val < opts['tol']):
+            vprev = pop.get_fittest().val
+            nstalled += 1
+        else:
+            vprev = pop.get_fittest().val
+            nstalled = 0
 
+        # Break if stalled
+        if nstalled >= opts['inertia']:
+            exitmsg = \
+                "Solution improvement below tolerance for {} generations" \
+                .format(nstalled)
+            break
+
+    if ng == opts['generations']:
+        exitmsg = "Maximum number of generations ({}) reached" \
+            .format(opts['generations'])
+
+    # Optimization result
     res = OptRes(
         x = pop.get_fittest().get_estimates(),
-        success = True,
-        message = "Exit message not defined yet",
-        ng = None,
+        ng = ng,
+        message = exitmsg,
         fun = pop.get_fittest().val
     )
 
     return res
+
+
+class OptRes:
+    """
+    Optimization result.
+
+    Instance attributes:
+    - x - numpy 1D array, optimized parameters
+    - message - str, exit message
+    - ng - int, number of generations
+    - fun - float, final function value
+    """
+    def __init__(self, x, message, ng, fun):
+        self.x = x
+        self.message = message
+        self.ng = ng
+        self.fun = fun
+
+    def __str__(self):
+        s = "Optimization result:\n"
+        s += "====================\n"
+        s += "x = {}\n".format(self.x)
+        s += "message = {}\n".format(self.message)
+        s += "ng = {}\n".format(self.ng)
+        s += "fun = {}\n".format(self.fun)
+        return s
 
 
 if __name__ == "__main__":
@@ -161,7 +196,7 @@ if __name__ == "__main__":
         return np.sum(x ** 2)
 
     bounds = ((0, 10), (0, 10), (0, 10), (0, 10), (0, 10))
-    options = {'tol': 1e-6}
+    options = {'tol': 1e-12, 'inertia': 25}
 
     res = minimize(f, bounds, options=options)
 
