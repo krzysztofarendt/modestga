@@ -45,7 +45,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
 
     `fun` must be a function of `x`, possibly followed by positional arguments.
 
-    `callback` arguments: `x`, `fx`, `ng`.
+    `callback` arguments: `x`, `fx`, `ng`, `*args`.
     `fx` is the function value at the generation `ng`.
 
     :param fun: function to be minimized
@@ -148,7 +148,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
         if callback is not None:
             x = fittest.get_estimates()
             fx = fittest.val
-            callback(x, fx, ng)
+            callback(x, fx, ng, *args)
 
         # Break if stalled
         if nstalled >= opts['inertia']:
@@ -198,34 +198,3 @@ class OptRes:
         s += "ng = {}\n".format(self.ng)
         s += "fx = {}\n".format(self.fx)
         return s
-
-
-if __name__ == "__main__":
-
-    logging.basicConfig(filename='ga.log', level='DEBUG', filemode='w')
-
-    def f(x):
-        return np.sum(x ** 2)
-
-    bounds = ((0, 10), (0, 10), (0, 10), (0, 10), (0, 10))
-
-    # Mutation distance = None
-    # Mutation rate = 0.05
-    options = {
-        'tol': 1e-6,
-        'inertia': 10,
-        'mut_rate': 0.05,
-    }
-    res = minimize(f, bounds, options=options)
-    print(res)
-
-    # Mutation distance = 0.01
-    # Mutation rate = 0.5
-    options = {
-        'tol': 1e-6,
-        'inertia': 10,
-        'mut_rate': 0.99,
-    }
-    res = minimize(f, bounds, x0=res.x, options=options)
-    print(res)
-
