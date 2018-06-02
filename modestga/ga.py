@@ -45,11 +45,14 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
 
     `fun` must be a function of `x`, possibly followed by positional arguments.
 
+    `callback` arguments: `x`, `fx`, `ng`.
+    `fx` is the function value at the generation `ng`.
+
     :param fun: function to be minimized
     :param bounds: tuple, parameter bounds
     :param x0: numpy 1D array, initial parameters
     :param args: tuple, positional arguments to be passed to `fun`
-    :param callback: function, called after every generation (TODO)
+    :param callback: function, called after every generation
     :param options: dict, GA options
     :return: OptRes, optimization result
     """
@@ -140,6 +143,12 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
         else:
             vprev = fittest.val
             nstalled = 0
+
+        # Callback
+        if callback is not None:
+            x = fittest.get_estimates()
+            fx = fittest.val
+            callback(x, fx, ng)
 
         # Break if stalled
         if nstalled >= opts['inertia']:

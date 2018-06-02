@@ -126,7 +126,19 @@ class TestModestga(unittest.TestCase):
         self.assertEqual(opt2.fun, self.fun(opt2.x))
         self.assertLessEqual(opt2.fun, opt1.fun)
 
-
+        # Test callback
+        options['generations'] = 5
+        def cb(x, fx, ng):
+            print("Generation #{}".format(ng))
+            print("x = {}".format(x))
+            print("f(x) = {}".format(fx))
+            global fx_last
+            global x_last
+            fx_last = fx
+            x_last = x
+        opt = ga.minimize(self.fun, bounds, callback=cb, options=options)
+        self.assertEqual(fx_last, opt.fun)
+        self.assertTrue((np.abs(x_last - opt.x) < 1e-10).all())
 
 
 if __name__ == "__main__":
