@@ -126,6 +126,12 @@ class TestModestga(unittest.TestCase):
         self.assertEqual(opt2.fx, self.fun(opt2.x))
         self.assertLessEqual(opt2.fx, opt1.fx)
 
+        # Test convergence
+        options['generations'] = 100
+        options['mut_rate'] = 0.1
+        opt = ga.minimize(self.fun, bounds)
+        self.assertLess(opt.fx, 0.1)
+
         # Test callback
         options['generations'] = 5
         def cb(x, fx, ng):
