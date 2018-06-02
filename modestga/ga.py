@@ -25,20 +25,6 @@ def norm(x, bounds):
     return n
 
 
-def denorm(x, bounds):
-    """
-    Denormalize `x` with respect to `bounds`.
-
-    :param x: 1D array, values in the range [0, 1] (inclusive)
-    :param bounds: tuple of tuples, lower and upper bounds
-    :return: 1D array
-    """
-    d = np.array(
-        [v * (b[1] - b[0]) + b[0] for v, b in zip(x, bounds)]
-    )
-    return d
-
-
 def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
     """
     Minimize `fun` using Genetic Algorithm.

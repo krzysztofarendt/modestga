@@ -5,7 +5,6 @@ import shutil
 import tempfile
 import random
 import numpy as np
-from modestga import metrics
 from modestga import individual
 from modestga import population
 from modestga import operators
@@ -26,12 +25,6 @@ class TestModestga(unittest.TestCase):
 
     def tearDown(self):
         pass
-
-    def test_metrics(self):
-        y1 = np.arange(10)
-        y2 = y1 + np.random.rand(y1.size)
-        e = metrics.rmse(y1, y2)  # True: 0.586
-        self.assertLess(0.586 - e, 1e-3)
 
     def test_individual(self):
         ind = individual.Individual(
