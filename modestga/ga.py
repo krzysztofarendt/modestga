@@ -166,7 +166,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
         x = pop.get_fittest().get_estimates(),
         ng = ng,
         message = exitmsg,
-        fun = pop.get_fittest().val
+        fx = pop.get_fittest().val
     )
 
     log.info(res)
@@ -182,13 +182,13 @@ class OptRes:
     - x - numpy 1D array, optimized parameters
     - message - str, exit message
     - ng - int, number of generations
-    - fun - float, final function value
+    - fx - float, final function value
     """
-    def __init__(self, x, message, ng, fun):
+    def __init__(self, x, message, ng, fx):
         self.x = x
         self.message = message
         self.ng = ng
-        self.fun = fun
+        self.fx = fx
 
     def __str__(self):
         s = "Optimization result:\n"
@@ -196,7 +196,7 @@ class OptRes:
         s += "x = {}\n".format(self.x)
         s += "message = {}\n".format(self.message)
         s += "ng = {}\n".format(self.ng)
-        s += "fun = {}\n".format(self.fun)
+        s += "fx = {}\n".format(self.fx)
         return s
 
 

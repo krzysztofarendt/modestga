@@ -118,13 +118,13 @@ class TestModestga(unittest.TestCase):
         # Test x0 and elitism
         options = {'generations': 10, 'mut_rate': 0.25}
         opt1 = ga.minimize(self.fun, bounds, options=options)
-        self.assertEqual(opt1.fun, self.fun(opt1.x))
+        self.assertEqual(opt1.fx, self.fun(opt1.x))
 
         options = {'generations': 10, 'mut_rate': 0.25}
         x0 = opt1.x
         opt2 = ga.minimize(self.fun, bounds, x0=x0, options=options)
-        self.assertEqual(opt2.fun, self.fun(opt2.x))
-        self.assertLessEqual(opt2.fun, opt1.fun)
+        self.assertEqual(opt2.fx, self.fun(opt2.x))
+        self.assertLessEqual(opt2.fx, opt1.fx)
 
         # Test callback
         options['generations'] = 5
@@ -137,7 +137,7 @@ class TestModestga(unittest.TestCase):
             fx_last = fx
             x_last = x
         opt = ga.minimize(self.fun, bounds, callback=cb, options=options)
-        self.assertEqual(fx_last, opt.fun)
+        self.assertEqual(fx_last, opt.fx)
         self.assertTrue((np.abs(x_last - opt.x) < 1e-10).all())
 
 
