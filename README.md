@@ -46,5 +46,14 @@ x = res.x
 fx = res.fx
 ```
 
+Installation:
+```
+pip install modestga
+```
+
+Run example:
+```python
+>>> from modestga.examples import min_noisy_function
+```
 
 Implementation based on [ModestPy](https://github.com/sdu-cfei/modest-py).
