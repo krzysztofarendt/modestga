@@ -1,8 +1,8 @@
 from setuptools import setup
 
 setup(name='modestga',
-      version='0.0.1',
-      description='Genetic algorithm with a scipy-like interface',
+      version='0.1',
+      description='Genetic Algorithm minimization',
       url='https://github.com/krzysztofarendt/modestga',
       keywords='genetic algorithm optimization',
       author='Krzysztof Arendt',
@@ -14,7 +14,8 @@ setup(name='modestga',
       ],
       include_package_data=True,
       install_requires=[
-          'numpy'
+          'numpy',
+          'matplotlib'
       ],
       classifiers = [
           'Programming Language :: Python :: 3',
