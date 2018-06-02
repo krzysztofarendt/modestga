@@ -29,10 +29,19 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
     """
     Minimize `fun` using Genetic Algorithm.
 
-    `fun` must be a function of `x`, possibly followed by positional arguments.
+    If `x0` is given, the initial population will contain one individual
+    based on `x0`. Otherwise, all individuals will be random.
+
+    `fun` arguments: `x`, `*args`.
 
     `callback` arguments: `x`, `fx`, `ng`, `*args`.
     `fx` is the function value at the generation `ng`.
+
+    Return an optimization result object with the following attributes:
+    - x - numpy 1D array, optimized parameters,
+    - message - str, exit message,
+    - ng - int, number of generations,
+    - fx - float, final function value.
 
     :param fun: function to be minimized
     :param bounds: tuple, parameter bounds
