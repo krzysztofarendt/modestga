@@ -100,12 +100,10 @@ class TestModestga(unittest.TestCase):
             "should be returned (at least with the current random seed)")
 
     def test_ga(self):
-        # Test norm(), denorm()
+        # Test norm()
         x = [0, 2.5, 7.5, 10]
         bounds = tuple([(0, 10) for i in x])
         n = ga.norm(x, bounds)
-        d = ga.denorm(n, bounds)
-        self.assertTrue((np.abs(d - x) < 1e-12).all())
         self.assertTrue((np.abs(n - np.array([0, 0.25, 0.75, 1.0])) < 1e-12).all())
 
         # Test x0 and elitism

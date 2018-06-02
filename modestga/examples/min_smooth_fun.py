@@ -1,5 +1,4 @@
 import logging
-import random
 import numpy as np
 import matplotlib.pyplot as plt
 from modestga import minimize
@@ -10,7 +9,7 @@ logging.basicConfig(filename='ga.log', level='INFO', filemode='w')
 
 def fun(x, *args):
     """Noisy function to be minimized"""
-    return np.sum(x ** 2) + random.random()
+    return np.sum(x ** 2)
 
 
 def callback(x, fx, ng, *args):
@@ -52,7 +51,7 @@ fig, ax = plt.subplots(2, 1, sharex=True)
 ax[0].plot(x_hist)
 ax[0].set_title('x')
 ax[1].plot(fx_hist)
-ax[1].set_title('f(x) = np.sum(x ** 2) + random.random()')
+ax[1].set_title('f(x) = np.sum(x ** 2)')
 ax[1].set_xlabel('Generation')
 
 plt.show()
