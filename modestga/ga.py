@@ -37,6 +37,18 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
     `callback` arguments: `x`, `fx`, `ng`, `*args`.
     `fx` is the function value at the generation `ng`.
 
+    The default options are::
+
+        opts = {
+            'generations': 100,     # Max. number of generations
+            'pop_size': 100,        # Population size
+            'mut_rate': 0.05,       # Mutation rate
+            'trm_size': 10,         # Tournament size
+            'tol': 1e-6,            # Solution tolerance
+            'inertia': 10,          # Max. number of non-improving generations
+            'xover_ratio': 0.5      # Crossover ratio
+        }
+
     Return an optimization result object with the following attributes:
     - x - numpy 1D array, optimized parameters,
     - message - str, exit message,
