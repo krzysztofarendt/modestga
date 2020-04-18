@@ -65,7 +65,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
     """
     np.set_printoptions(precision=3)
 
-    log = logging.getLogger(name='minimize')
+    log = logging.getLogger(name='minimize(GA)')
     log.info('Start minimization')
 
     opts = {
@@ -134,7 +134,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
             )
 
             children.append(child)
-        
+
         # Update population with new individuals
         pop.ind = children
 
