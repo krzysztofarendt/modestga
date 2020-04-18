@@ -113,9 +113,13 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
             # No
             tries -= 1
 
+        # Callback
+        if callback is not None:
+            callback(xbest, ybest, count, *args)
+
+        # Exit message
         if tries == 0:
             exitmsg = f"Max. number of tries ({opts['inertia']}) reached"
-
         if count == opts['generations']:
             exitmsg = f"Max. number of iterations ({opts['generations']}) reached"
 
