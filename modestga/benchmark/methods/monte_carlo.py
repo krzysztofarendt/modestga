@@ -143,22 +143,12 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
 
 
 if __name__ == "__main__":
-    logging.basicConfig(filename='mc.log', level='DEBUG', filemode='w')
+    # Example
+    logging.basicConfig(level='DEBUG')
 
-    N = 3
+    from modestga.benchmark.functions import rastrigin
 
-    def fun(x, *args):
-        """Rastrigin function to be minimized.
-
-        Global minimum y=0 at x=[0, 0, ..., 0].
-        """
-        A = 100
-        global N
-        y = A * N + np.sum(x ** 2 - A * np.cos(2 * np.pi * x))
-        return y
-
+    N = 5
     bounds = [(-5.12, 5.12) for i in range(N)]
-    x0 = np.array([1. for x in bounds])
-
-    res = minimize(fun, bounds, x0)
+    res = minimize(rastrigin, bounds, x0=None)
     print(res)
