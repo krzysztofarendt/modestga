@@ -51,9 +51,9 @@ Installation:
 pip install modestga
 ```
 
-Run example:
+Run example (50-dimensional [Rastrigin function](https://en.wikipedia.org/wiki/Rastrigin_function) minimization):
 ```python
->>> from modestga.examples import min_noisy_fun
+>>> from modestga.examples import min_rastrigin_fun
 ```
 
 Implementation based on [ModestPy](https://github.com/sdu-cfei/modest-py).
