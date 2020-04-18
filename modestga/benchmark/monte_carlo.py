@@ -10,10 +10,10 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
     The default options are::
 
         opts = {
-            'generations': 100, # Max. number of generations (iterations)
-            'pop_size': 100,    # Population size (number of guesses per iteration)
-            'tol': 1e-6,        # Solution tolerance
-            'inertia': 10,      # Max. number of non-improving generations
+            'generations': 10000, # Max. number of generations (iterations)
+            'pop_size': 1000,     # Population size (number of guesses per iteration)
+            'tol': 1e-6,          # Solution tolerance
+            'inertia': 1000,      # Max. number of non-improving generations
         }
 
     :param fun: function to be minimized
@@ -39,10 +39,10 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
         return rx
 
     opts = {
-        'generations': 100,     # Max. number of generations
-        'pop_size': 100,        # Population size
-        'tol': 1e-6,            # Solution tolerance
-        'inertia': 10,         # Max. number of non-improving generations
+        'generations': 10000,  # Max. number of generations
+        'pop_size': 1000,      # Population size
+        'tol': 1e-6,           # Solution tolerance
+        'inertia': 1000,       # Max. number of non-improving generations
     }
 
     for k in options:
@@ -158,8 +158,7 @@ if __name__ == "__main__":
         return y
 
     bounds = [(-5.12, 5.12) for i in range(N)]
-    x0 = np.array([3. for x in bounds])
-    # x0 = None
+    x0 = np.array([1. for x in bounds])
 
     res = minimize(fun, bounds, x0)
     print(res)
