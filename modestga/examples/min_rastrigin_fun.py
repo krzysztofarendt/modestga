@@ -46,7 +46,7 @@ options = {
     'tol': 1e-8,
     'pop_size': 200,
     'trm_size': 40,
-    'mut_rate': 0.05,
+    'mut_rate': 0.01,
     'generations': 1000,
     'inertia': 50,
     'xover_ratio': 0.2

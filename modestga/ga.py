@@ -42,11 +42,11 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
         options = {
             'generations': 1000,    # Max. number of generations
             'pop_size': 100,        # Population size
-            'mut_rate': 0.05,       # Mutation rate
+            'mut_rate': 0.01,       # Mutation rate
             'trm_size': 10,         # Tournament size
             'tol': 1e-3,            # Solution tolerance
             'inertia': 10,          # Max. number of non-improving generations
-            'xover_ratio': 0.5      # Crossover ratio
+            'xover_ratio': 0.2      # Crossover ratio
         }
 
     Return an optimization result object with the following attributes:
@@ -71,11 +71,11 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
     opts = {
         'generations': 1000,    # Max. number of generations
         'pop_size': 100,        # Population size
-        'mut_rate': 0.2,       # Mutation rate
+        'mut_rate': 0.01,       # Mutation rate
         'trm_size': 20,         # Tournament size
         'tol': 1e-3,            # Solution tolerance
         'inertia': 100,         # Max. number of non-improving generations
-        'xover_ratio': 0.5      # Crossover ratio
+        'xover_ratio': 0.2      # Crossover ratio
     }
 
     for k in options:
@@ -227,7 +227,7 @@ if __name__ == "__main__":
 
     from modestga.benchmark.functions import rastrigin
 
-    N = 5
+    N = 50
     bounds = [(-5.12, 5.12) for i in range(N)]
     res = minimize(rastrigin, bounds, x0=None)
     print(res)

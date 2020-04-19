@@ -76,11 +76,11 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
 
 if __name__ == "__main__":
     # Example
-    logging.basicConfig(level='DEBUG')
+    logging.basicConfig(level='INFO')
 
     from modestga.benchmark.functions import rastrigin
 
-    N = 5
+    N = 50
     bounds = [(-5.12, 5.12) for i in range(N)]
     res = minimize(rastrigin, bounds, x0=None)
     print(res)

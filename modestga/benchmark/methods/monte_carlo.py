@@ -39,10 +39,10 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
         return rx
 
     opts = {
-        'generations': 10000,  # Max. number of generations
-        'pop_size': 1000,      # Population size
+        'generations': 1000,  # Max. number of generations
+        'pop_size': 100,      # Population size
         'tol': 1e-3,           # Solution tolerance
-        'inertia': 1000,       # Max. number of non-improving generations
+        'inertia': 100,       # Max. number of non-improving generations
     }
 
     for k in options:
@@ -148,7 +148,7 @@ if __name__ == "__main__":
 
     from modestga.benchmark.functions import rastrigin
 
-    N = 5
+    N = 50
     bounds = [(-5.12, 5.12) for i in range(N)]
     res = minimize(rastrigin, bounds, x0=None)
     print(res)

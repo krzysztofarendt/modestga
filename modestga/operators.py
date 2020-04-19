@@ -5,12 +5,10 @@ import numpy as np
 
 def crossover(ind1, ind2, uniform=0.5):
     log = logging.getLogger('crossover')
-    # log.debug("{} x {}".format(ind1.id, ind2.id))
     child = ind1.copy()
 
-    for i in range(ind2.gen.size):
-        if random.random() > uniform:
-            child.gen[i] = ind2.gen[i]
+    rand = np.random.random(size=child.gen.size)
+    child.gen = np.where(rand > uniform, child.gen, ind2.gen)
 
     return child
 
