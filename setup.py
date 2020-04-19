@@ -2,7 +2,7 @@ from setuptools import setup
 import setuptools
 
 setup(name='modestga',
-      version='0.3',
+      version='0.4dev',
       description='Genetic Algorithm minimization',
       url='https://github.com/krzysztofarendt/modestga',
       keywords='genetic algorithm optimization',
