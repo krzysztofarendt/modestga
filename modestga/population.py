@@ -17,7 +17,7 @@ class Population():
                 fun=fun)
             )
 
-        self.log.debug('Instantiated:\n{}'.format(self))
+        # self.log.debug('Instantiated:\n{}'.format(self))
 
     def get_fittest(self):
         fittest = None

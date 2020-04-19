@@ -71,7 +71,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
     opts = {
         'generations': 1000,    # Max. number of generations
         'pop_size': 100,        # Population size
-        'mut_rate': 0.25,       # Mutation rate
+        'mut_rate': 0.2,       # Mutation rate
         'trm_size': 20,         # Tournament size
         'tol': 1e-6,            # Solution tolerance
         'inertia': 100,         # Max. number of non-improving generations
@@ -80,12 +80,12 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
 
     for k in options:
         if k in opts:
-            log.debug('Override default option: {}={}'.format(k, options[k]))
+            # log.debug('Override default option: {}={}'.format(k, options[k]))
             opts[k] = options[k]
         else:
             raise KeyError("Option '{}' not found".format(k))
 
-    log.debug('Final options: {}'.format(opts))
+    # log.debug('Final options: {}'.format(opts))
 
     # Initialize population
     pop = population.Population(opts['pop_size'], bounds, fun)
@@ -116,11 +116,11 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
 
         # Initialize children
         children = list()
-        log.debug('Initiaze new children')
+        # log.debug('Initiaze new children')
 
         # Elitism
         children.append(pop.get_fittest())
-        log.debug('Elitism, add {}'.format(children[0]))
+        # log.debug('Elitism, add {}'.format(children[0]))
 
         # Fill other slots with children
         while len(children) < len(pop.ind):

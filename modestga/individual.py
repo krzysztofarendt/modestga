@@ -50,7 +50,7 @@ class Individual():
         # Evaluate and save score
         self.val = self.evaluate()
 
-        self.log.debug("Instantiated with genes {}".format(self.gen))
+        # self.log.debug("Instantiated with genes {}".format(self.gen))
 
     def set_genes(self, g):
         self.gen = g

@@ -5,7 +5,7 @@ import numpy as np
 
 def crossover(ind1, ind2, uniform=0.5):
     log = logging.getLogger('crossover')
-    log.debug("{} x {}".format(ind1.id, ind2.id))
+    # log.debug("{} x {}".format(ind1.id, ind2.id))
     child = ind1.copy()
 
     for i in range(ind2.gen.size):
@@ -29,7 +29,7 @@ def tournament(pop, size):
     i1 = group1[fit1]
     i2 = group2[fit2]
 
-    log.debug("{}, {}".format(i1.id, i2.id))
+    # log.debug("{}, {}".format(i1.id, i2.id))
 
     return i1, i2
 
@@ -43,11 +43,24 @@ def mutation(ind, rate):
     :return: mutated Individual (copy)
     """
     log = logging.getLogger('mutation')
-    log.debug('{}'.format(ind.id))
+    # log.debug('{}'.format(ind.id))
 
+    # Draw random value to be compared with rate
     mut = np.random.rand(ind.gen.size)
-    mut = np.where(mut < rate, random.random(), ind.gen)
+
+    # Draw new random genes from a normal distribution
+    # TODO: Calibrate scale
+    mut_gen = np.random.normal(loc=ind.gen, scale=0.15)
+    # To 0-1 range
+    mut_gen = np.where(mut_gen > 1., 1., mut_gen)
+    mut_gen = np.where(mut_gen < 0., 0., mut_gen)
+    # Substitute genes where mut < rate
+    new_gen = np.where(mut < rate, mut_gen, ind.gen)
+
+    # log.debug(f"Old genes: {ind.gen}")
+    # log.debug(f"Candidate genes {mut_gen}")
+    # log.debug(f"New genes {new_gen}")
 
     mutind = ind.copy()
-    mutind.set_genes(mut)
+    mutind.set_genes(new_gen)
     return mutind
