@@ -55,5 +55,3 @@ Run example (50-dimensional [Rastrigin function](https://en.wikipedia.org/wiki/R
 ```python
 >>> from modestga.examples import min_rastrigin_fun
 ```
-
-Implementation based on [ModestPy](https://github.com/sdu-cfei/modest-py).
