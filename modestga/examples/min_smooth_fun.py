@@ -33,14 +33,7 @@ x_hist = list()
 fx_hist = list()
 args = (x_hist, fx_hist)
 
-options = {
-    'tol': 1e-6,
-    'pop_size': 100,
-    'trm_size': 50,
-    'mut_rate': 0.1
-}
-
-res = minimize(fun, bounds, args=args, callback=callback, options=options)
+res = minimize(fun, bounds, args=args, callback=callback)
 
 # Print optimization result
 print(res)
