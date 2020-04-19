@@ -1,3 +1,4 @@
+import logging
 from scipy.optimize import differential_evolution
 import numpy as np
 from modestga.ga import OptRes
@@ -18,7 +19,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
 
     Default options::
 
-        opts = {
+        options = {
             'generations': 1000,
             'pop_size': 100,
             'tol': 1e-6,
@@ -33,4 +34,53 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
     :param options: dict, DE options
     :return: OptRes, optimization result
     """
-    pass  #TODO
+    np.set_printoptions(precision=3)
+    log = logging.getLogger(name='minimize(DE)')
+
+    opts = {
+        'generations': 1000,
+        'pop_size': 100,
+        'tol': 1e-6,
+        'polish': False
+    }
+
+    for k in options:
+        if k in opts:
+            log.info('Override default option: {}={}'.format(k, options[k]))
+            opts[k] = options[k]
+        else:
+            raise KeyError("Option '{}' not found".format(k))
+
+    res_de = differential_evolution(
+        fun,
+        bounds,
+        args,
+        maxiter=opts['generations'],
+        popsize=opts['pop_size'],
+        tol=opts['tol'],
+        polish=False,
+        disp=True,
+        workers=1
+    )
+
+    res = OptRes(
+        x=res_de.x,
+        message=res_de.message,
+        ng=res_de.nit,
+        nfev=res_de.nfev,
+        fx=res_de.fun
+    )
+
+    return res
+
+
+if __name__ == "__main__":
+    # Example
+    logging.basicConfig(level='DEBUG')
+
+    from modestga.benchmark.functions import rastrigin
+
+    N = 5
+    bounds = [(-5.12, 5.12) for i in range(N)]
+    res = minimize(rastrigin, bounds, x0=None)
+    print(res)

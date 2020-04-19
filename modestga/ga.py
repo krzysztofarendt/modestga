@@ -39,8 +39,8 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
 
     The default options are::
 
-        opts = {
-            'generations': 100,     # Max. number of generations
+        options = {
+            'generations': 1000,    # Max. number of generations
             'pop_size': 100,        # Population size
             'mut_rate': 0.05,       # Mutation rate
             'trm_size': 10,         # Tournament size
@@ -69,23 +69,23 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
     log.info('Start minimization')
 
     opts = {
-        'generations': 100,     # Max. number of generations
+        'generations': 1000,    # Max. number of generations
         'pop_size': 100,        # Population size
-        'mut_rate': 0.05,       # Mutation rate
-        'trm_size': 10,         # Tournament size
+        'mut_rate': 0.25,       # Mutation rate
+        'trm_size': 20,         # Tournament size
         'tol': 1e-6,            # Solution tolerance
-        'inertia': 10,          # Max. number of non-improving generations
+        'inertia': 100,         # Max. number of non-improving generations
         'xover_ratio': 0.5      # Crossover ratio
     }
 
     for k in options:
         if k in opts:
-            log.info('Override default option: {}={}'.format(k, options[k]))
+            log.debug('Override default option: {}={}'.format(k, options[k]))
             opts[k] = options[k]
         else:
             raise KeyError("Option '{}' not found".format(k))
 
-    log.info('Final options: {}'.format(opts))
+    log.debug('Final options: {}'.format(opts))
 
     # Initialize population
     pop = population.Population(opts['pop_size'], bounds, fun)
@@ -100,9 +100,9 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
             fun=fun,
             args=args
         )
-        log.info('Individual based on x0:\n{}'.format(pop.ind[0]))
+        log.debug('Individual based on x0:\n{}'.format(pop.ind[0]))
 
-    log.info('Initial population:\n{}'.format(pop))
+    log.debug('Initial population:\n{}'.format(pop))
 
     # Loop over generations
     ng = 0
@@ -138,7 +138,6 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
         # Update population with new individuals
         pop.ind = children
 
-        log.info('Generation {}:\n{}'.format(gi, pop))
 
         # Tolerance check
         fittest = pop.get_fittest()
@@ -150,6 +149,9 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
         else:
             vprev = fittest.val
             nstalled = 0
+
+        log.info(f'Generation {gi}: f(x) = {fittest.val}')
+        log.debug('Generation {}:\n{}'.format(gi, pop))
 
         # Callback
         if callback is not None:
@@ -210,3 +212,15 @@ class OptRes:
         s += "nfev = {}\n".format(self.nfev)
         s += "fx = {}\n".format(self.fx)
         return s
+
+
+if __name__ == "__main__":
+    # Example
+    logging.basicConfig(level='INFO')
+
+    from modestga.benchmark.functions import rastrigin
+
+    N = 5
+    bounds = [(-5.12, 5.12) for i in range(N)]
+    res = minimize(rastrigin, bounds, x0=None)
+    print(res)

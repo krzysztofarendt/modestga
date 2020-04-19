@@ -9,7 +9,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
     The options have similar names to GA to avoid confusion.
     The default options are::
 
-        opts = {
+        options = {
             'generations': 10000, # Max. number of generations (iterations)
             'pop_size': 1000,     # Population size (number of guesses per iteration)
             'tol': 1e-6,          # Solution tolerance
