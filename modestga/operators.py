@@ -34,12 +34,13 @@ def tournament(pop, size):
     return i1, i2
 
 
-def mutation(ind, rate):
+def mutation(ind, rate, scale):
     """
     Mutate genes. `rate` controls how many genes are mutated.
 
     :param ind: Individual
     :param rate: float (0-1), mutation rate
+    :param scale: standard deviation of the normal distribution
     :return: mutated Individual (copy)
     """
     log = logging.getLogger('mutation')
@@ -49,8 +50,7 @@ def mutation(ind, rate):
     mut = np.random.rand(ind.gen.size)
 
     # Draw new random genes from a normal distribution
-    # TODO: Calibrate scale
-    mut_gen = np.random.normal(loc=ind.gen, scale=0.15)
+    mut_gen = np.random.normal(loc=ind.gen, scale=scale)
     # To 0-1 range
     mut_gen = np.where(mut_gen > 1., 1., mut_gen)
     mut_gen = np.where(mut_gen < 0., 0., mut_gen)

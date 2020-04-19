@@ -73,7 +73,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
         'pop_size': 100,        # Population size
         'mut_rate': 0.2,       # Mutation rate
         'trm_size': 20,         # Tournament size
-        'tol': 1e-6,            # Solution tolerance
+        'tol': 1e-3,            # Solution tolerance
         'inertia': 100,         # Max. number of non-improving generations
         'xover_ratio': 0.5      # Crossover ratio
     }
@@ -109,6 +109,8 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
     nstalled = 0
     vprev = None
     exitmsg = None
+    scale = 0.33
+    mut_rate = opts['mut_rate']
 
     for gi in range(opts['generations']):
 
@@ -123,15 +125,19 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
         # log.debug('Elitism, add {}'.format(children[0]))
 
         # Fill other slots with children
+        if nstalled > (opts['inertia'] // 3):
+            scale *= 0.75
+            mut_rate /= 0.9
+            mut_rate = 0.5 if mut_rate > 0.5 else mut_rate
+        # log.info(f"scale={scale}, mut_rate={mut_rate}")
+
         while len(children) < len(pop.ind):
             #Cross-over
             i1, i2 = operators.tournament(pop, opts['trm_size'])
             child = operators.crossover(i1, i2, opts['xover_ratio'])
 
             # Mutation
-            child = operators.mutation(
-                child, opts['mut_rate']
-            )
+            child = operators.mutation(child, opts['mut_rate'], scale)
 
             children.append(child)
 
