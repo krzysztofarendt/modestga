@@ -9,13 +9,13 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
 
     This is a thin wrapper over the scipy implementation::
 
-    scipy.optimize.differential_evolution(
-        func, bounds, args=(), strategy='best1bin', maxiter=1000,
-        popsize=15, tol=0.01, mutation=(0.5, 1), recombination=0.7,
-        seed=None, callback=None, disp=False, polish=True,
-        init='latinhypercube', atol=0, updating='immediate',
-        workers=1, constraints=()
-    )
+        scipy.optimize.differential_evolution(
+            func, bounds, args=(), strategy='best1bin', maxiter=1000,
+            popsize=15, tol=0.01, mutation=(0.5, 1), recombination=0.7,
+            seed=None, callback=None, disp=False, polish=True,
+            init='latinhypercube', atol=0, updating='immediate',
+            workers=1, constraints=()
+        )
 
     Default options::
 
