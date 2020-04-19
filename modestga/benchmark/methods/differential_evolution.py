@@ -22,7 +22,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
         options = {
             'generations': 1000,
             'pop_size': 100,
-            'tol': 1e-6,
+            'tol': 1e-3,
             'polish': False
         }
 
@@ -40,7 +40,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
     opts = {
         'generations': 1000,
         'pop_size': 100,
-        'tol': 1e-6,
+        'tol': 1e-3,
         'polish': False
     }
 

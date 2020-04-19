@@ -12,7 +12,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
         options = {
             'generations': 10000, # Max. number of generations (iterations)
             'pop_size': 1000,     # Population size (number of guesses per iteration)
-            'tol': 1e-6,          # Solution tolerance
+            'tol': 1e-3,          # Solution tolerance
             'inertia': 1000,      # Max. number of non-improving generations
         }
 
@@ -41,7 +41,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
     opts = {
         'generations': 10000,  # Max. number of generations
         'pop_size': 1000,      # Population size
-        'tol': 1e-6,           # Solution tolerance
+        'tol': 1e-3,           # Solution tolerance
         'inertia': 1000,       # Max. number of non-improving generations
     }
 
@@ -144,7 +144,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
 
 if __name__ == "__main__":
     # Example
-    logging.basicConfig(level='DEBUG')
+    logging.basicConfig(level='INFO')
 
     from modestga.benchmark.functions import rastrigin
 

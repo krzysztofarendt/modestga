@@ -44,7 +44,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
             'pop_size': 100,        # Population size
             'mut_rate': 0.05,       # Mutation rate
             'trm_size': 10,         # Tournament size
-            'tol': 1e-6,            # Solution tolerance
+            'tol': 1e-3,            # Solution tolerance
             'inertia': 10,          # Max. number of non-improving generations
             'xover_ratio': 0.5      # Crossover ratio
         }
