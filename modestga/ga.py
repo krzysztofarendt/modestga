@@ -124,20 +124,21 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
         children.append(pop.get_fittest())
         # log.debug('Elitism, add {}'.format(children[0]))
 
-        # Fill other slots with children
+        # Adaptive mutation parameters
         if nstalled > (opts['inertia'] // 3):
-            scale *= 0.75
-            mut_rate /= 0.9
-            mut_rate = 0.5 if mut_rate > 0.5 else mut_rate
+            scale *= 0.75                                   # Search closer to current x
+            mut_rate /= 0.9                                 # Mutate more often
+            mut_rate = 0.5 if mut_rate > 0.5 else mut_rate  # But not more often than 50%
         # log.info(f"scale={scale}, mut_rate={mut_rate}")
 
+        # Fill other slots with children
         while len(children) < len(pop.ind):
             #Cross-over
             i1, i2 = operators.tournament(pop, opts['trm_size'])
             child = operators.crossover(i1, i2, opts['xover_ratio'])
 
             # Mutation
-            child = operators.mutation(child, opts['mut_rate'], scale)
+            child = operators.mutation(child, mut_rate, scale)
 
             children.append(child)
 
