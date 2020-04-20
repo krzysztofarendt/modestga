@@ -75,7 +75,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
         'trm_size': 20,         # Tournament size
         'tol': 1e-3,            # Solution tolerance
         'inertia': 100,         # Max. number of non-improving generations
-        'xover_ratio': 0.2      # Crossover ratio
+        'xover_ratio': 0.5      # Crossover ratio
     }
 
     for k in options:
@@ -127,7 +127,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
         # Adaptive mutation parameters
         if nstalled > (opts['inertia'] // 3):
             scale *= 0.75                                   # Search closer to current x
-            mut_rate /= 0.9                                 # Mutate more often
+            mut_rate /= 1 - 1 / len(bounds)                 # Mutate more often
             mut_rate = 0.5 if mut_rate > 0.5 else mut_rate  # But not more often than 50%
         # log.info(f"scale={scale}, mut_rate={mut_rate}")
 
