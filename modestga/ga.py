@@ -80,12 +80,9 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
 
     for k in options:
         if k in opts:
-            # log.debug('Override default option: {}={}'.format(k, options[k]))
             opts[k] = options[k]
         else:
             raise KeyError("Option '{}' not found".format(k))
-
-    # log.debug('Final options: {}'.format(opts))
 
     # Initialize population
     pop = population.Population(opts['pop_size'], bounds, fun)
@@ -118,11 +115,9 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
 
         # Initialize children
         children = list()
-        # log.debug('Initiaze new children')
 
         # Elitism
         children.append(pop.get_fittest())
-        # log.debug('Elitism, add {}'.format(children[0]))
 
         # Adaptive mutation parameters
         if nstalled > (opts['inertia'] // 3):
@@ -144,7 +139,6 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
 
         # Update population with new individuals
         pop.ind = children
-
 
         # Tolerance check
         fittest = pop.get_fittest()

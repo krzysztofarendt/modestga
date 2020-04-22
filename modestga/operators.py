@@ -42,7 +42,6 @@ def mutation(ind, rate, scale):
     :return: mutated Individual (copy)
     """
     # log = logging.getLogger('mutation')
-    # log.debug('{}'.format(ind.id))
 
     # Draw random value to be compared with rate
     mut = np.random.rand(ind.gen.size)
