@@ -30,11 +30,13 @@ class Individual():
     # Total number of function evaluations
     nfev = 0
 
-    def __init__(self, genes, bounds, fun, args=()):
+    def __init__(self, genes, bounds, fun, args=(), val=None):
         """
         :param genes: 1D array, floats between 0 and 1 (inclusive)
         :param bounds: tuple of tuples, parameter bounds (min, max)
         :param fun: function to be minimized
+        :param args: arguments to pass to fun
+        :param val: Function value or None
         """
         # Set name
         self.id = 'Ind#{}'.format(Individual.count)
@@ -48,13 +50,15 @@ class Individual():
         self.bnd = bounds_tuples_to_array(bounds)
 
         # Evaluate and save score
-        self.val = self.evaluate()
+        if val is None:
+            self.val = self.evaluate()
+        else:
+            self.val = val
 
         # self.log.debug("Instantiated with genes {}".format(self.gen))
 
     def set_genes(self, g):
         self.gen = g
-        self.val = self.evaluate()
 
     def get_estimates(self):
         return self.bnd[0] + self.gen * (self.bnd[1] - self.bnd[0])
@@ -67,13 +71,16 @@ class Individual():
         you may read the instance attribute `val`.
         """
         Individual.nfev += 1
-        return self.fun(self.get_estimates(), *self.args)
+        self.val = self.fun(self.get_estimates(), *self.args)
+        return self.val
 
     def copy(self):
         ind = Individual(
             self.gen,
             bounds_array_to_tuples(self.bnd),
-            self.fun
+            self.fun,
+            self.args,
+            self.val
         )
         return ind
 

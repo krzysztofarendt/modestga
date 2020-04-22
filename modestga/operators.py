@@ -4,7 +4,7 @@ import numpy as np
 
 
 def crossover(ind1, ind2, uniform=0.5):
-    log = logging.getLogger('crossover')
+    # log = logging.getLogger('crossover')
     child = ind1.copy()
 
     rand = np.random.random(size=child.gen.size)
@@ -14,7 +14,7 @@ def crossover(ind1, ind2, uniform=0.5):
 
 
 def tournament(pop, size):
-    log = logging.getLogger('tournament')
+    # log = logging.getLogger('tournament')
 
     # Form groups
     group1 = np.random.choice(pop.ind, size=size, replace=False)
@@ -41,7 +41,7 @@ def mutation(ind, rate, scale):
     :param scale: standard deviation of the normal distribution
     :return: mutated Individual (copy)
     """
-    log = logging.getLogger('mutation')
+    # log = logging.getLogger('mutation')
     # log.debug('{}'.format(ind.id))
 
     # Draw random value to be compared with rate
@@ -61,4 +61,5 @@ def mutation(ind, rate, scale):
 
     mutind = ind.copy()
     mutind.set_genes(new_gen)
+    mutind.evaluate()
     return mutind

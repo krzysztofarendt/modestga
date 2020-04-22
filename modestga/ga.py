@@ -157,8 +157,8 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
             vprev = fittest.val
             nstalled = 0
 
-        log.info(f'Generation {gi}: f(x) = {fittest.val}')
-        log.debug('Generation {}:\n{}'.format(gi, pop))
+        log.info(f'ng = {gi}, nfev = {fittest.nfev}, f(x) = {fittest.val}')
+        # log.debug('Generation {}:\n{}'.format(gi, pop))
 
         # Callback
         if callback is not None:
@@ -223,7 +223,7 @@ class OptRes:
 
 if __name__ == "__main__":
     # Example
-    logging.basicConfig(level='INFO')
+    logging.basicConfig(level='DEBUG')
 
     from modestga.benchmark.functions import rastrigin
 
