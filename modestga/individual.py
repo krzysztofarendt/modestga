@@ -55,8 +55,6 @@ class Individual():
         else:
             self.val = val
 
-        # self.log.debug("Instantiated with genes {}".format(self.gen))
-
     def set_genes(self, g):
         self.gen = g
 

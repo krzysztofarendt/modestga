@@ -12,11 +12,14 @@ logging.basicConfig(level='INFO')
 
 
 if __name__ == '__main__':
+    # Test name
+    tname = 't1__ga_0_01__de_0-1_9'
+
     # Number of tests
     n_tests = 10
 
     # Number of dimensions
-    n_dims = [2, 4, 8, 16, 32, 64, 128]
+    n_dims = [2, 4, 8, 16, 32, 64]
 
     # Functions to test
     functions = [
@@ -30,6 +33,12 @@ if __name__ == '__main__':
         'generations': 1000,  # Max. number of generations
         'pop_size': 100,      # Population size
         'tol': 1e-3           # Solution tolerance
+    }
+
+    mutation = {
+        'ga': 0.01,  # Initial mutation, it's adaptive
+        'differential_evolution': (0, 1.9),
+        'monte_carlo': None
     }
 
     # Results
@@ -48,6 +57,10 @@ if __name__ == '__main__':
                 k3 = f'method={fname}'
                 res[k1][k2][k3] = dict()
 
+                mut = mutation[fname]
+                if mut is not None:
+                    options['mut_rate'] = mut
+
                 bounds = [(-5.12, 5.12) for i in range(nd)]
                 t0 = time.perf_counter()
                 out = fun(rastrigin, bounds, x0=None, options=options)
@@ -60,7 +73,7 @@ if __name__ == '__main__':
                 res[k1][k2][k3]['message'] = str(out.message)
                 res[k1][k2][k3]['time'] = elapsed_t
 
-                with open('modestga/benchmark/results/test_1.yaml', 'w') as yaml_file:
+                with open(f'modestga/benchmark/results/{tname}.yaml', 'w') as yaml_file:
                     yaml.dump(res, yaml_file)
 
     print('Finished!')

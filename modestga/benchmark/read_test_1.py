@@ -7,7 +7,7 @@ import pandas as pd
 with open('modestga/benchmark/results/test_1.yaml') as f:
     d = yaml.load(f)
 
-df = pd.DataFrame(columns=['run', 'ndim', 'method', 'f(x)', 'nfev', 'ng', 'time'])
+df = pd.DataFrame(columns=['run', 'ndim', 'method', 'f(x)', 'nfev', 'ng', 'time', 'mut'])
 
 for k1 in d.keys():
     for k2 in d[k1].keys():
