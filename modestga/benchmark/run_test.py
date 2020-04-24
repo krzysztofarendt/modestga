@@ -13,13 +13,13 @@ logging.basicConfig(level='INFO')
 
 if __name__ == '__main__':
     # Test name
-    tname = 't1__ga_0_01__de_0-1_9'
+    tname = 'test_3'  # Change name and parameters below
 
     # Number of tests
-    n_tests = 10
+    n_tests = 5
 
     # Number of dimensions
-    n_dims = [2, 4, 8, 16, 32, 64]
+    n_dims = [2, 4, 8, 16, 32, 64, 128]
 
     # Functions to test
     functions = [
@@ -36,8 +36,8 @@ if __name__ == '__main__':
     }
 
     mutation = {
-        'ga': 0.01,  # Initial mutation, it's adaptive
-        'differential_evolution': (0, 1.9),
+        'ga': 0.0025,  # Initial mutation, it's adaptive
+        'differential_evolution': (0, 0.5),
         'monte_carlo': None
     }
 
@@ -58,12 +58,14 @@ if __name__ == '__main__':
                 res[k1][k2][k3] = dict()
 
                 mut = mutation[fname]
+                print(mut, fname)
+                opts = options.copy()
                 if mut is not None:
-                    options['mut_rate'] = mut
+                    opts['mut_rate'] = mut
 
                 bounds = [(-5.12, 5.12) for i in range(nd)]
                 t0 = time.perf_counter()
-                out = fun(rastrigin, bounds, x0=None, options=options)
+                out = fun(rastrigin, bounds, x0=None, options=opts)
                 elapsed_t = time.perf_counter() - t0
 
                 res[k1][k2][k3]['f(x)'] = float(out.fx)
@@ -72,6 +74,8 @@ if __name__ == '__main__':
                 res[k1][k2][k3]['ng'] = int(out.ng)
                 res[k1][k2][k3]['message'] = str(out.message)
                 res[k1][k2][k3]['time'] = elapsed_t
+                res[k1][k2][k3]['mut'] = f"{mut}"
+
 
                 with open(f'modestga/benchmark/results/{tname}.yaml', 'w') as yaml_file:
                     yaml.dump(res, yaml_file)

@@ -42,7 +42,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
         'pop_size': 100,
         'tol': 1e-3,
         'polish': False,
-        'mutation': (0, 1.9)  # Low values not sufficient for difficult functions
+        'mut_rate': (0.5, 1)
     }
 
     for k in options:
@@ -59,7 +59,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
         maxiter=opts['generations'],
         popsize=opts['pop_size'],
         tol=opts['tol'],
-        mutation=opts['mutation'],
+        mutation=opts['mut_rate'],
         polish=False,
         disp=True,
         workers=1
