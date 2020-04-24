@@ -9,6 +9,12 @@ minimize(fun, bounds, x0=None, args=(), callback=None, options={})
 ```
 pip install modestga
 ```
+To get the latest version, clone the repository and install using `setup.py`:
+```
+git clone https://github.com/krzysztofarendt/modestga
+cd modestga
+pip install -e .
+```
 
 ## Test
 Run example (50-dimensional [Rastrigin function](https://en.wikipedia.org/wiki/Rastrigin_function) minimization):
