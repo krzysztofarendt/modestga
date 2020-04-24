@@ -17,8 +17,9 @@ def tournament(pop, size):
     # log = logging.getLogger('tournament')
 
     # Form groups
-    group1 = np.random.choice(pop.ind, size=size, replace=False)
-    group2 = np.random.choice(pop.ind, size=size, replace=False)
+    g1g2 = np.random.choice(pop.ind, size=size*2, replace=False)
+    group1 = g1g2[:size]
+    group2 = g1g2[size+1:]
 
     # Pick and return fittest from each group
     fit1 = np.argmin([x.val for x in group1])

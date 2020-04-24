@@ -1,4 +1,5 @@
 import logging
+import time
 import numpy as np
 from modestga import individual
 from modestga import operators
@@ -84,22 +85,25 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
         else:
             raise KeyError("Option '{}' not found".format(k))
 
+    # Reset nfev counter
+    individual.Individual.nfev = 0
+
     # Initialize population
     pop = population.Population(opts['pop_size'], bounds, fun)
 
     # Add user guess if present
     if x0 is not None:
         x0 = np.array(x0)
-        log.debug('Using initial guess x0={}'.format(x0))
+        # log.debug('Using initial guess x0={}'.format(x0))
         pop.ind[0] = individual.Individual(
             genes=norm(x0, bounds),
             bounds=bounds,
             fun=fun,
             args=args
         )
-        log.debug('Individual based on x0:\n{}'.format(pop.ind[0]))
+        # log.debug('Individual based on x0:\n{}'.format(pop.ind[0]))
 
-    log.debug('Initial population:\n{}'.format(pop))
+    # log.debug('Initial population:\n{}'.format(pop))
 
     # Loop over generations
     ng = 0
@@ -110,7 +114,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
     mut_rate = opts['mut_rate']
 
     for gi in range(opts['generations']):
-
+        log.debug(f"Generation {gi}")
         ng += 1
 
         # Initialize children
@@ -159,6 +163,13 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
             x = fittest.get_estimates()
             fx = fittest.val
             callback(x, fx, ng, *args)
+
+        # Break if successful, i.e. f(x) = 0
+        if fittest.val < opts['tol']:
+            exitmsg = \
+                "Solution found, f(x) < 0 + tol" \
+                .format(nstalled)
+            break
 
         # Break if stalled
         if nstalled >= opts['inertia']:
