@@ -23,15 +23,15 @@ Run example (50-dimensional [Rastrigin function](https://en.wikipedia.org/wiki/R
 ```
 
 ## Benchmark
-The algorithm has been benchmarked against [Differential Evolution (SciPy)](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.differential_evolution.html) and naive Monte Carlo (`modestga.benchmark.methods.monte_carlo`). The below chart shows mean results from five runs for each case. The main parameters were as follows:
+The algorithm has been benchmarked against [Differential Evolution (SciPy)](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.differential_evolution.html) and naive Monte Carlo (`modestga.benchmark.methods.monte_carlo`) using the [Rastrigin function](https://en.wikipedia.org/wiki/Rastrigin_function). The below chart shows mean results from five runs for each case. The main parameters were as follows:
 - population = 100,
-- mutation rate - three scenarios for GA and DE,
 - maximum number of generations = 1000,
-- tolerance = 1e-3.
+- tolerance = 1e-3,
+- mutation rate - three scenarios for GA and DE.
 
-The Monte Carlo method was simply stopped at 1000 iteration. The best candidate solution from each iteration was saved for a subsequent iteration.
+The Monte Carlo method did not take into account the tolerance and was simply stopped at 1000 iteration.
 
- Note that in Differentian Evolution the population size is multiplied by the number of parameters. In `modestga` the population size is constant. For exact meaning of different parameters in Differential Evolution, please refer to the SciPy documention.
+Note that, unlike in `modestga`, in Differentian Evolution the population size is multiplied by the number of parameters. For exact meaning of the mutation parameter in Differential Evolution please refer to the SciPy documention.
 
 ![Comparison](modestga/benchmark/results/comparison.png)
 
