@@ -16,10 +16,13 @@ def crossover(ind1, ind2, uniform=0.5):
 def tournament(pop, size):
     # log = logging.getLogger('tournament')
 
+    assert size * 2 < len(pop.ind), \
+        "Tournament size has to be lower than population // 2"
+
     # Form groups
     g1g2 = np.random.choice(pop.ind, size=size*2, replace=False)
     group1 = g1g2[:size]
-    group2 = g1g2[size+1:]
+    group2 = g1g2[size:]
 
     # Pick and return fittest from each group
     fit1 = np.argmin([x.val for x in group1])

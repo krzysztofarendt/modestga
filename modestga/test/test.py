@@ -76,12 +76,10 @@ class TestModestga(unittest.TestCase):
             size=1, bounds=[(0, 5) for x in range(100)], fun=self.fun
         )
         ind = pop.ind[0]
-        mut1 = operators.mutation(ind, rate=0.5) # mutate some randomly
-        mut2 = operators.mutation(ind, rate=1.0) # mutate all randomly
-        mut3 = operators.mutation(ind, rate=0.0) # mutate none
-        self.assertTrue((mut1.gen == ind.gen).sum() > 0)
-        self.assertTrue((mut2.gen != ind.gen).all())
-        self.assertTrue((mut3.gen == ind.gen).all())
+        mut1 = operators.mutation(ind, rate=1.0, scale=0.1) # mutate all randomly
+        mut2 = operators.mutation(ind, rate=0.0, scale=0.1) # mutate none
+        self.assertTrue((mut1.gen != ind.gen).all())
+        self.assertTrue((mut2.gen == ind.gen).all())
 
         # Tournament
         popsize = 50
@@ -89,12 +87,20 @@ class TestModestga(unittest.TestCase):
             size=popsize, bounds=[(0, 5) for x in range(5)], fun=self.fun
         )
 
-        t1, t2 = operators.tournament(pop, popsize)
-        self.assertEqual(t1.id, t2.id,
-            "Tournament size equal to population size, "
-            "yet two different individuals selected")
+        try:
+            t1, t2 = operators.tournament(pop, popsize)
+        except AssertionError as e:
+            # Tournament size has to be lower than population/2
+            # This exception is fine
+            print(f"\nAssertionError caught: '{e}'")
+            pass
 
         t1, t2 = operators.tournament(pop, 10)
+        self.assertNotEqual(t1.id, t2.id,
+            "Small tournament size, so two different individuals "
+            "should be returned (at least with the current random seed)")
+
+        t1, t2 = operators.tournament(pop, 1)
         self.assertNotEqual(t1.id, t2.id,
             "Small tournament size, so two different individuals "
             "should be returned (at least with the current random seed)")
@@ -111,7 +117,7 @@ class TestModestga(unittest.TestCase):
         opt1 = ga.minimize(self.fun, bounds, options=options)
         self.assertEqual(opt1.fx, self.fun(opt1.x))
 
-        options = {'generations': 10, 'mut_rate': 0.25}
+        options = {'generations': 50, 'mut_rate': 0.01}
         x0 = opt1.x
         opt2 = ga.minimize(self.fun, bounds, x0=x0, options=options)
         self.assertEqual(opt2.fx, self.fun(opt2.x))
@@ -119,7 +125,7 @@ class TestModestga(unittest.TestCase):
 
         # Test convergence
         options['generations'] = 100
-        options['mut_rate'] = 0.1
+        options['mut_rate'] = 0.01
         opt = ga.minimize(self.fun, bounds)
         self.assertLess(opt.fx, 0.1)
 
