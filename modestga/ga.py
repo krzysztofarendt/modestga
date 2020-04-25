@@ -44,10 +44,10 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
             'generations': 1000,    # Max. number of generations
             'pop_size': 100,        # Population size
             'mut_rate': 0.01,       # Mutation rate
-            'trm_size': 10,         # Tournament size
+            'trm_size': 20,         # Tournament size
             'tol': 1e-3,            # Solution tolerance
-            'inertia': 10,          # Max. number of non-improving generations
-            'xover_ratio': 0.2      # Crossover ratio
+            'inertia': 100,         # Max. number of non-improving generations
+            'xover_ratio': 0.5      # Crossover ratio
         }
 
     Return an optimization result object with the following attributes:
