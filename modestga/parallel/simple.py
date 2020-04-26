@@ -2,6 +2,7 @@ from multiprocessing import Process, Queue
 import queue
 import os
 import logging
+import time
 
 import pandas as pd
 import numpy as np
@@ -11,7 +12,7 @@ import modestga
 from modestga.ga import OptRes
 from modestga.benchmark.functions import rastrigin
 
-logging.basicConfig(level='DEBUG', format="[%(processName)s] %(message)s")
+# logging.basicConfig(level='INFO', format="[%(processName)s] %(message)s")
 
 
 class ParallelMinimize:
@@ -21,7 +22,7 @@ class ParallelMinimize:
     between processes. Instead, the best final solution is returned.
     """
     def __init__(self, fun, bounds, x0=None, args=(),
-                 callback=None, options={}, workers=os.cpu_count()):
+                 callback=None, options={}, workers=os.cpu_count() - 1):
 
         self.pickled_fun = cloudpickle.dumps(fun)
         self.bounds = bounds
@@ -51,20 +52,25 @@ class ParallelMinimize:
             processes.append(p)
 
         # Wait for the results
+        n_results = 0
+
+        while n_results < self.workers:
+            try:
+                res = self.queue.get(True, timeout=5)
+                all_results.append(res)
+                n_results = len(all_results)
+            except queue.Empty:
+                time.sleep(0.05)
+                continue
+
+        # Join processes
         for p in processes:
             p.join()
 
-        # Read the results
-        not_empty = True
-        while not_empty:
-            try:
-                res = self.queue.get(False)
-                all_results.append(res)
-            except queue.Empty:
-                not_empty = False
-
         # All results to dataframe
         df = pd.DataFrame(all_results).sort_values('fx')
+        
+        logging.info(f"Results from all processes:\n{df}")
 
         return df
 
@@ -86,11 +92,11 @@ class ParallelMinimize:
             'fx': result.fx
         }
 
-        queue.put(result_dict)
+        queue.put(result_dict, block=True, timeout=5)
 
 
 def minimize(fun, bounds, x0=None, args=(), callback=None, options={},
-             workers=os.cpu_count()):
+             workers=os.cpu_count() - 1):
     """Wrapper over ParallelMinimize providing same interface as modestga.minimize()"""
 
     pmin = ParallelMinimize(fun, bounds, x0, args, callback, options, workers)
@@ -108,27 +114,17 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={},
 
 
 if __name__ == "__main__":
-    # Some unpickable (by the standard pickle module) function
-    fun = lambda x: np.sum(np.array(x) ** 2)
-    pickled = cloudpickle.dumps(fun)
-
-    # Bounds
-    bounds = [(-5.12, 5.12) for i in range(10)]
-
+    # Example
+    fun = rastrigin
+    bounds = [(-5.12, 5.12) for i in range(32)]
     options = {
-        'generations': 100
+        'generations': 50,
+        'pop_size': 100
     }
-
     def callback(x, fx, ng, *args):
         """Callback function called after each generation"""
-        print('CALLBACK')
-        print('    Generation #{}'.format(ng))
-        print('    x = {}'.format(x))
-        print('    fx = {}'.format(fx))
-
-    # pmin = ParallelMinimize(fun, bounds, callback=callback, options=options)
-    # res = pmin.run()
-    # print(res)
+        # print(f"\nCallback example:\nx=\n{x}\nf(x)={fx}\n")
+        pass
 
     res = minimize(fun, bounds, callback=callback, options=options)
     print(res)
