@@ -114,7 +114,6 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
     mut_rate = opts['mut_rate']
 
     for gi in range(opts['generations']):
-        log.debug(f"Generation {gi}")
         ng += 1
 
         # Initialize children
