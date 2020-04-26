@@ -12,10 +12,10 @@ import modestga
 from modestga.ga import OptRes
 from modestga.benchmark.functions import rastrigin
 
-# logging.basicConfig(level='INFO', format="[%(processName)s] %(message)s")
+logging.basicConfig(level='INFO', format="[%(processName)s][%(levelname)s] %(message)s")
 
 
-class ParallelMinimize:
+class SimpleParallel:
     """Runs multiple minimization processes in parallel and returns all results.
 
     This is the most simple implementation in which there is no communication
@@ -38,7 +38,7 @@ class ParallelMinimize:
         all_results = list()
         for i in range(self.workers):
             pid = i
-            p = Process(target=self._optimization_process,
+            p = Process(target=SimpleParallel._optimization_process,
                         args=(self.pickled_fun,
                               self.bounds,
                               self.x0,
@@ -74,7 +74,8 @@ class ParallelMinimize:
 
         return df
 
-    def _optimization_process(self, pickled_fun, bounds, x0,
+    @staticmethod
+    def _optimization_process(pickled_fun, bounds, x0,
                               pickled_args, pickled_callback, options,
                               queue, pid):
         fun = cloudpickle.loads(pickled_fun)
@@ -97,9 +98,9 @@ class ParallelMinimize:
 
 def minimize(fun, bounds, x0=None, args=(), callback=None, options={},
              workers=os.cpu_count() - 1):
-    """Wrapper over ParallelMinimize providing same interface as modestga.minimize()"""
+    """Wrapper over SimpleParallel providing same interface as modestga.minimize()"""
 
-    pmin = ParallelMinimize(fun, bounds, x0, args, callback, options, workers)
+    pmin = SimpleParallel(fun, bounds, x0, args, callback, options, workers)
     res = pmin.run()
     best_res = res.iloc[0]  # Beacuse df is sorted by fx in ascending order
 
@@ -115,11 +116,13 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={},
 
 if __name__ == "__main__":
     # Example
+    from modestga.benchmark.functions import rastrigin
     fun = rastrigin
-    bounds = [(-5.12, 5.12) for i in range(32)]
+    bounds = [(-5.12, 5.12) for i in range(64)]
     options = {
-        'generations': 50,
-        'pop_size': 100
+        'generations': 100,
+        'pop_size': 100,
+        'tol': 1e-3
     }
     def callback(x, fx, ng, *args):
         """Callback function called after each generation"""

@@ -1,5 +1,6 @@
 import logging
 import time
+import uuid
 import numpy as np
 from modestga import individual
 from modestga import operators
@@ -26,9 +27,9 @@ def norm(x, bounds):
     return n
 
 
-def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
-    """
-    Minimize `fun` using Genetic Algorithm.
+def minimize(fun, bounds, x0=None, args=(), callback=None, options={},
+             _proc_callback=None, _queue=None, _n_shared=None):
+    """Minimizes `fun` using Genetic Algorithm.
 
     If `x0` is given, the initial population will contain one individual
     based on `x0`. Otherwise, all individuals will be random.
@@ -50,25 +51,37 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
             'xover_ratio': 0.5      # Crossover ratio
         }
 
-    Return an optimization result object with the following attributes:
+    Returns an optimization result object with the following attributes:
     - x - numpy 1D array, optimized parameters,
     - message - str, exit message,
     - ng - int, number of generations,
     - fx - float, final function value.
 
+    Arguments starting with an underscore `_` should not be used.
+
     :param fun: function to be minimized
     :param bounds: tuple, parameter bounds
     :param x0: numpy 1D array, initial parameters
-    :param args: tuple, positional arguments to be passed to `fun`
+    :param args: tuple, positional arguments to be passed to `fun` and to `callback`
     :param callback: function, called after every generation
     :param options: dict, GA options
+    :param _proc_callback: callback for `modestga.parallel.standard`, don't use it
+    :param _queue: queue to share data in `modestga.parallel.standard`, don't use it
+    :param _n_shared: parameter used in `modestga.parallel.standard`, don't use it
     :return: OptRes, optimization result
     """
-    np.set_printoptions(precision=3)
-
     log = logging.getLogger(name='minimize(GA)')
     log.info('Start minimization')
 
+    np.set_printoptions(precision=3)
+
+    # Function call uuid
+    fcid = uuid.uuid4()
+
+    # Individuals from other processes (if multiprocessing is used)
+    foreign_individuals = list()
+
+    # Options
     opts = {
         'generations': 1000,    # Max. number of generations
         'pop_size': 100,        # Population size
@@ -101,9 +114,6 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
             fun=fun,
             args=args
         )
-        # log.debug('Individual based on x0:\n{}'.format(pop.ind[0]))
-
-    # log.debug('Initial population:\n{}'.format(pop))
 
     # Loop over generations
     ng = 0
@@ -122,15 +132,18 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
         # Elitism
         children.append(pop.get_fittest())
 
+        # Individuals from other processes
+        if len(foreign_individuals) > 0:
+            pop.ind.extend(foreign_individuals)
+
         # Adaptive mutation parameters
         if nstalled > (opts['inertia'] // 3):
             scale *= 0.75                                   # Search closer to current x
             mut_rate /= 1 - 1 / len(bounds)                 # Mutate more often
             mut_rate = 0.5 if mut_rate > 0.5 else mut_rate  # But not more often than 50%
-        # log.info(f"scale={scale}, mut_rate={mut_rate}")
 
         # Fill other slots with children
-        while len(children) < len(pop.ind):
+        while len(children) < opts['pop_size']:
             #Cross-over
             i1, i2 = operators.tournament(pop, opts['trm_size'])
             child = operators.crossover(i1, i2, opts['xover_ratio'])
@@ -155,13 +168,38 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
             nstalled = 0
 
         log.info(f'ng = {gi}, nfev = {fittest.nfev}, f(x) = {fittest.val}')
-        # log.debug('Generation {}:\n{}'.format(gi, pop))
 
-        # Callback
+        # User callback function
         if callback is not None:
             x = fittest.get_estimates()
             fx = fittest.val
             callback(x, fx, ng, *args)
+
+        # Inter-process communication callback.
+        # Similar to `callback` but passes the UUID of this function call
+        # which can be used to distinguish inter-process function calls.
+        # Also, it does not pass *args.
+        if _proc_callback is not None:
+            # Share fittest
+            x = fittest.get_estimates()
+            fx = fittest.val
+
+            # Share random
+            # rand_indiv = pop.ind[int(np.random.randint(0, len(pop.ind), size=1))]
+            # x = rand_indiv.get_estimates()
+            # fx = rand_indiv.val
+
+            # Call inter-process callback
+            foreign_data = _proc_callback(x, fx, ng, fcid, _queue, _n_shared)
+
+            # Add foreign individuals to the current population
+            foreign_individuals = list()
+            for d in foreign_data:
+                source_id = d[0]
+                source_param = d[1]
+                source_fx = d[2]
+                ind = individual.Individual(source_param, bounds, fun, args, source_fx)
+                foreign_individuals.append(ind)
 
         # Break if successful, i.e. f(x) = 0
         if fittest.val < opts['tol']:
@@ -191,7 +229,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
         fx = fittest.val
     )
 
-    log.info(res)
+    # log.info(res)
 
     return res
 
@@ -227,11 +265,18 @@ class OptRes:
 
 if __name__ == "__main__":
     # Example
-    logging.basicConfig(level='DEBUG')
-
     from modestga.benchmark.functions import rastrigin
+    fun = rastrigin
+    bounds = [(-5.12, 5.12) for i in range(64)]
+    options = {
+        'generations': 100,
+        'pop_size': 100,
+        'tol': 1e-3
+    }
+    def callback(x, fx, ng, *args):
+        """Callback function called after each generation"""
+        # print(f"\nCallback example:\nx=\n{x}\nf(x)={fx}\n")
+        pass
 
-    N = 50
-    bounds = [(-5.12, 5.12) for i in range(N)]
-    res = minimize(rastrigin, bounds, x0=None)
+    res = minimize(fun, bounds, callback=callback, options=options)
     print(res)
