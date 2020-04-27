@@ -17,7 +17,7 @@ def tournament(pop, size):
     # log = logging.getLogger('tournament')
 
     assert size * 2 < len(pop.ind), \
-        "Tournament size has to be lower than population // 2"
+        f"Tournament size ({size}) has to be lower than population ({len(pop.ind)}) // 2"
 
     # Form groups
     g1g2 = np.random.choice(pop.ind, size=size*2, replace=False)
