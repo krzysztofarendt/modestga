@@ -27,8 +27,7 @@ def norm(x, bounds):
     return n
 
 
-def minimize(fun, bounds, x0=None, args=(), callback=None, options={},
-             _proc_callback=None, _queue=None, _n_shared=None):
+def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
     """Minimizes `fun` using Genetic Algorithm.
 
     If `x0` is given, the initial population will contain one individual
@@ -57,17 +56,12 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={},
     - ng - int, number of generations,
     - fx - float, final function value.
 
-    Arguments starting with an underscore `_` should not be used.
-
     :param fun: function to be minimized
     :param bounds: tuple, parameter bounds
     :param x0: numpy 1D array, initial parameters
     :param args: tuple, positional arguments to be passed to `fun` and to `callback`
     :param callback: function, called after every generation
     :param options: dict, GA options
-    :param _proc_callback: callback for `modestga.parallel.standard`, don't use it
-    :param _queue: queue to share data in `modestga.parallel.standard`, don't use it
-    :param _n_shared: parameter used in `modestga.parallel.standard`, don't use it
     :return: OptRes, optimization result
     """
     log = logging.getLogger(name='minimize(GA)')
@@ -132,10 +126,6 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={},
         # Elitism
         children.append(pop.get_fittest())
 
-        # Individuals from other processes
-        if len(foreign_individuals) > 0:
-            pop.ind.extend(foreign_individuals)
-
         # Adaptive mutation parameters
         if nstalled > (opts['inertia'] // 3):
             scale *= 0.75                                   # Search closer to current x
@@ -174,32 +164,6 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={},
             x = fittest.get_estimates()
             fx = fittest.val
             callback(x, fx, ng, *args)
-
-        # Inter-process communication callback.
-        # Similar to `callback` but passes the UUID of this function call
-        # which can be used to distinguish inter-process function calls.
-        # Also, it does not pass *args.
-        if _proc_callback is not None:
-            # Share fittest
-            x = fittest.get_estimates()
-            fx = fittest.val
-
-            # Share random
-            # rand_indiv = pop.ind[int(np.random.randint(0, len(pop.ind), size=1))]
-            # x = rand_indiv.get_estimates()
-            # fx = rand_indiv.val
-
-            # Call inter-process callback
-            foreign_data = _proc_callback(x, fx, ng, fcid, _queue, _n_shared)
-
-            # Add foreign individuals to the current population
-            foreign_individuals = list()
-            for d in foreign_data:
-                source_id = d[0]
-                source_param = d[1]
-                source_fx = d[2]
-                ind = individual.Individual(source_param, bounds, fun, args, source_fx)
-                foreign_individuals.append(ind)
 
         # Break if successful, i.e. f(x) = 0
         if fittest.val < opts['tol']:
