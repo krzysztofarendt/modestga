@@ -255,8 +255,9 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}, workers=o
             # Elitism (replace random individual)
             new_ind[random.randint(0, len(new_ind) - 1)] = pop.get_fittest()
 
-            # Put individuals in a random order (does it help?)
-            pass
+            # Put individuals in a random order
+            # (otherwise subpopulation don't exchange genes)
+            random.shuffle(new_ind)
 
             # Update individuals
             pop.ind = new_ind
@@ -365,6 +366,6 @@ if __name__ == "__main__":
         pass
 
     t0 = time.perf_counter()
-    res = minimize(fun, bounds, callback=callback, options=options, workers=5)
+    res = minimize(fun, bounds, callback=callback, options=options, workers=4)
     print(res)
     print(f"Time: {time.perf_counter() - t0}")
