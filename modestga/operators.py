@@ -64,5 +64,5 @@ def mutation(ind, rate, scale):
 
     mutind = ind.copy()
     mutind.set_genes(new_gen)
-    mutind.evaluate()
+
     return mutind

@@ -27,9 +27,6 @@ class Individual():
     # Total number of instances
     count = 0
 
-    # Total number of function evaluations
-    nfev = 0
-
     def __init__(self, genes, bounds, fun, args=(), val=None):
         """
         :param genes: 1D array, floats between 0 and 1 (inclusive)
@@ -68,7 +65,6 @@ class Individual():
         Instead of calling this method,
         you may read the instance attribute `val`.
         """
-        Individual.nfev += 1
         self.val = self.fun(self.get_estimates(), *self.args)
         return self.val
 

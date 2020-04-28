@@ -24,8 +24,7 @@ def parallel_pop(pipe,
     fun = cloudpickle.loads(pickled_fun)
 
     # Initialize population
-    # TODO: Unnecessary evaluation of each individual at this step
-    pop = population.Population(pop_size, bounds, fun)
+    pop = population.Population(pop_size, bounds, fun, evaluate=False)
 
     while not end_event.is_set():
         # Get data
@@ -35,6 +34,7 @@ def parallel_pop(pipe,
             break
         scale = data['scale']
         pop.set_genes(data['genes'])
+        pop.set_fx(data['fx'])
 
         # Generate children
         children = list()
@@ -48,6 +48,10 @@ def parallel_pop(pipe,
             # Mutation
             child = operators.mutation(child, mut_rate, scale)
 
+            # Evaluate f(x)
+            child.evaluate()
+
+            # Add to children
             children.append(child)
             fx.append(child.val)
 

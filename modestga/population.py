@@ -5,7 +5,7 @@ from modestga.individual import Individual
 
 class Population():
 
-    def __init__(self, size, bounds, fun, args=(), genes=None):
+    def __init__(self, size, bounds, fun, args=(), genes=None, evaluate=True):
         self.log = logging.getLogger('Population')
 
         self.ind = list()
@@ -13,23 +13,37 @@ class Population():
         if genes is None:
             genes = np.random.rand(len(bounds))
 
+        if evaluate is True:
+            val = None
+        else:
+            val = np.nan
+
         for i in range(size):
-            self.ind.append(Individual(
-                genes=np.random.rand(len(bounds)),
-                bounds=bounds,
-                fun=fun,
-                args=args)
+            self.ind.append(
+                Individual(
+                    genes=np.random.rand(len(bounds)),
+                    bounds=bounds,
+                    fun=fun,
+                    args=args,
+                    val=val
+                )
             )
 
-    def set_genes(self, genes, evaluate=True):
+    def set_genes(self, genes):
         for i, g in enumerate(genes):
             self.ind[i].gen = g
-            if evaluate is True:
-                self.ind[i].evaluate()
+
+    def set_fx(self, fx):
+        for i, y in enumerate(fx):
+            self.ind[i].val = y
 
     def get_genes(self):
         genes = [x.gen for x in self.ind]
         return genes
+
+    def get_fx(self):
+        fx = [x.val for x in self.ind]
+        return fx
 
     def get_fittest(self):
         fittest = None
