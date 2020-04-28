@@ -5,7 +5,6 @@ import yaml
 
 from modestga import ga
 from modestga.parallel import simple
-from modestga.parallel import standard
 from modestga.benchmark.functions import rastrigin
 
 logging.basicConfig(level='INFO')
@@ -16,16 +15,18 @@ if __name__ == '__main__':
     tname = 'parallel_results_1'  # Change name and parameters below
 
     # Number of tests
-    n_tests = 20
+    n_tests = 10
 
     # Number of dimensions
-    n_dims = [128]
+    n_dims = 128
+
+    # Workers
+    n_workers = [1, 2, 3, 4, 5, 6, 7, 8]
 
     # Functions to test
     functions = [
         ga.minimize,
-        simple.minimize,
-        standard.minimize
+        simple.minimize
     ]
 
     # Options
@@ -42,8 +43,8 @@ if __name__ == '__main__':
         k1 = f'run={i}'
         res[k1] = dict()
 
-        for nd in n_dims:
-            k2 = f'ndim={nd}'
+        for nw in n_workers:
+            k2 = f'nworkers={nw}'
             res[k1][k2] = dict()
 
             for fun in functions:
@@ -53,9 +54,9 @@ if __name__ == '__main__':
 
                 opts = options.copy()
 
-                bounds = [(-5.12, 5.12) for i in range(nd)]
+                bounds = [(-5.12, 5.12) for i in range(n_dims)]
                 t0 = time.perf_counter()
-                out = fun(rastrigin, bounds, x0=None, options=opts)
+                out = fun(rastrigin, bounds, x0=None, options=opts, workers=nw)
                 elapsed_t = time.perf_counter() - t0
 
                 res[k1][k2][k3]['f(x)'] = float(out.fx)
