@@ -82,7 +82,7 @@ class SimpleParallel:
         args = cloudpickle.loads(pickled_args)
         callback = cloudpickle.loads(pickled_callback)
 
-        result = modestga.minimize(fun, bounds, x0, args, callback, options)
+        result = modestga.minimize(fun, bounds, x0, args, callback, options, workers=1)
 
         result_dict = {
             'pid': pid,
