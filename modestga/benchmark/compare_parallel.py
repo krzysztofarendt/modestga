@@ -15,7 +15,7 @@ if __name__ == '__main__':
     tname = 'parallel_results_1'  # Change name and parameters below
 
     # Number of tests
-    n_tests = 10
+    n_tests = 1
 
     # Number of dimensions
     n_dims = 128
@@ -32,7 +32,7 @@ if __name__ == '__main__':
     # Options
     options = {
         'generations': 1000,  # Max. number of generations
-        'pop_size': 100,      # Population size
+        'pop_size': 1000,      # Population size
         'tol': 1e-3           # Solution tolerance
     }
 
