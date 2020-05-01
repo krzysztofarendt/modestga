@@ -52,7 +52,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}, workers=o
 
         options = {
             'generations': 1000,    # Max. number of generations
-            'pop_size': 100,        # Population size
+            'pop_size': 100 * workers,  # Population size
             'mut_rate': 0.01,       # Mutation rate
             'trm_size': 20,         # Tournament size
             'tol': 1e-3,            # Solution tolerance
@@ -86,7 +86,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}, workers=o
     # Options
     opts = {
         'generations': 1000,    # Max. number of generations
-        'pop_size': 100,        # Population size
+        'pop_size': 100 * workers,  # Population size
         'mut_rate': 0.01,       # Mutation rate
         'trm_size': 20,         # Tournament size
         'tol': 1e-3,            # Solution tolerance
