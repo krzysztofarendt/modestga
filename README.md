@@ -136,9 +136,10 @@ Summary:
 - the increasing time in Differential Evolution is due to the increasing size of population (it's multiplied by the number of parameters), but larger population seems to be inefective in solving the minimization problem.
 
 ### Number of CPUs vs. computing time
-To be added soon...
+
+The performance of the parallel minimization was evaluated using the 128-dimensional Rastrigin function.
 
 <p align="center">
-<img src="modestga/benchmark/results/parallel_results.png" align="center">
+<img src="modestga/benchmark/results/comparison_parallel.png" align="center">
 <div align="center">Figure 3: Parallel minimization performance</div>
 </p>
