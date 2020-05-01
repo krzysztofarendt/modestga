@@ -35,7 +35,7 @@ import random
 import numpy as np
 from modestga import minimize
 
-# Define function to be minimized (can be noisy)
+# Define function to be minimized (can be noisy and non-convex)
 def fun(x, *args):
     return np.sum(x ** 2) + random.random()
 
@@ -67,7 +67,7 @@ from modestga import minimize
 # Set up logging if needed
 logging.basicConfig(filename='ga.log', level='INFO', filemode='w')
 
-# Define function to be minimized (can be noisy)
+# Define function to be minimized (can be noisy and non-convex)
 def fun(x, *args):
     return np.sum(x ** 2) + random.random()
 
