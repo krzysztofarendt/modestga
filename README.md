@@ -39,7 +39,7 @@ The algorithm has been benchmarked against [Differential Evolution (SciPy)](http
 
 The Monte Carlo method did not take into account the tolerance and was simply stopped at 1000 iteration.
 
-Note that, unlike in `modestga`, in Differentian Evolution the population size is multiplied by the number of parameters. For exact meaning of the mutation parameter in Differential Evolution please refer to the SciPy documention.
+Note that unlike in `modestga`, in Differentian Evolution the population size is multiplied by the number of parameters. For exact meaning of the mutation parameter in Differential Evolution please refer to the SciPy documention.
 
 ![Comparison](modestga/benchmark/results/comparison.png)
 
