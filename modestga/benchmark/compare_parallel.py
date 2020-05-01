@@ -15,7 +15,7 @@ if __name__ == '__main__':
     tname = 'parallel_results_1'  # Change name and parameters below
 
     # Number of tests
-    n_tests = 1
+    n_tests = 5
 
     # Number of dimensions
     n_dims = 128
@@ -25,8 +25,8 @@ if __name__ == '__main__':
 
     # Functions to test
     functions = [
-        ga.minimize,
-        simple.minimize
+        ga.minimize
+        # simple.minimize
     ]
 
     # Options

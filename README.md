@@ -5,6 +5,11 @@ Genetic Algorithm with a `scipy`-like interface:
 minimize(fun, bounds, x0=None, args=(), callback=None, options={})
 ```
 
+Main features:
+- parallel (two parallel modes available: full and simple),
+- adaptive mutation,
+- pure Python, so easy to adapt to own needs.
+
 ## Installation
 ```
 pip install modestga
@@ -22,12 +27,15 @@ Run example (50-dimensional [Rastrigin function](https://en.wikipedia.org/wiki/R
 >>> from modestga.examples import min_rastrigin_fun
 ```
 
-## Benchmark
+## Benchmarks
+
+### modestga vs. Differential Evolution (Scipy) vs. Monte Carlo
 The algorithm has been benchmarked against [Differential Evolution (SciPy)](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.differential_evolution.html) and naive Monte Carlo (`modestga.benchmark.methods.monte_carlo`) using the [Rastrigin function](https://en.wikipedia.org/wiki/Rastrigin_function). The below chart shows mean results from five runs for each case. The main parameters were as follows:
 - population = 100,
 - maximum number of generations = 1000,
 - tolerance = 1e-3,
-- mutation rate - three scenarios for GA and DE.
+- mutation rate - three scenarios for GA and DE,
+- workers (CPUs) = 1.
 
 The Monte Carlo method did not take into account the tolerance and was simply stopped at 1000 iteration.
 
@@ -37,8 +45,11 @@ Note that, unlike in `modestga`, in Differentian Evolution the population size i
 
 Summary:
 - in almost all considered mutation cases `modestga` achieves similar or better result in significantly shorter time for large-scale problems (N > 32),
-- the increasing time in Differential Evolution is due to the increasing size of population (it's multiplied by the number of parameters), but larger population seems to be inefective in solving the minimization problem,
-- `modestga` is slower for small-scale problems, especially when the cost function evaluation is fast, as in this case.
+- `modestga` is slower for small-scale problems, especially when the cost function evaluation is fast, as in this case,
+- the increasing time in Differential Evolution is due to the increasing size of population (it's multiplied by the number of parameters), but larger population seems to be inefective in solving the minimization problem.
+
+### Number of CPUs vs. computing time
+...
 
 ## Example
 ```python
@@ -54,21 +65,20 @@ logging.basicConfig(filename='ga.log', level='INFO', filemode='w')
 def fun(x, *args):
     return np.sum(x ** 2) + random.random()
 
-# Specify parameter bounds (here: 100 parameters)
-# Lower bounds <- 0
-# Upper bounds <- 10
+# Specify parameter bounds (here: 100 parameters allowed to vary from 0 to 10)
 bounds = [(0, 10) for i in range(100)]
 
 # Overwrite default evolution options
-# (keep in mind that the defaults are quite good though!)
 options = {
-    'tol': 1e-6,
-    'pop_size': 100,
-    'trm_size': 50,
-    'mut_rate': 0.01
+    'generations': 1000,    # Max. number of generations
+    'pop_size': 500,        # Population size
+    'mut_rate': 0.01,       # Initial mutation rate (adaptive mutation)
+    'trm_size': 20,         # Tournament size
+    'tol': 1e-3             # Solution tolerance
 }
 
 # Minimize
+# (it uses all available CPUs by default)
 res = minimize(fun, bounds, options=options)
 
 # Print optimization result
@@ -79,4 +89,7 @@ x = res.x
 
 # Final function value
 fx = res.fx
+
+# Number of function evaluations
+nfev = res.nfev
 ```
