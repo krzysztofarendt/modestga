@@ -43,7 +43,7 @@ Note that unlike in `modestga`, in Differentian Evolution the population size is
 
 <p align="center">
 <img src="modestga/benchmark/results/comparison.png" align="center">
-<center>Figure 1: Comparison results</center>
+<div align="center">Figure 1: Comparison results</div>
 </p>
 
 Summary:
