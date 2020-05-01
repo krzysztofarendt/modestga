@@ -6,9 +6,17 @@ minimize(fun, bounds, x0=None, args=(), callback=None, options={})
 ```
 
 Main features:
-- parallel (two parallel modes available: full and simple),
+- parallel,
 - adaptive mutation,
 - pure Python, so easy to adapt to own needs.
+
+By default `modestga` runs on all CPUs and divides the population among subpopulations (1 per CPU)
+which exchange genes at every generation (Fig. 1a). Alternatively, it can be run in a simplified parallel mode in which an exact copy of the initial population runs in parallel on each CPU and the best result among all is returned (Fig. 1b).
+
+<p align="center">
+<img src="modestga/resources/parallel.png" align="center">
+<div align="center">Figure 1: Parallel modes</div>
+</p>
 
 ## Installation
 ```
@@ -106,7 +114,7 @@ nfev = res.nfev
 ## Benchmarks
 
 ### modestga vs. Differential Evolution (Scipy) vs. Monte Carlo
-The algorithm has been benchmarked against [Differential Evolution (SciPy)](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.differential_evolution.html) and naive Monte Carlo (`modestga.benchmark.methods.monte_carlo`) using the [Rastrigin function](https://en.wikipedia.org/wiki/Rastrigin_function). Fig. 1 shows mean results from five runs for each case. The main parameters were as follows:
+The algorithm has been benchmarked against [Differential Evolution (SciPy)](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.differential_evolution.html) and naive Monte Carlo (`modestga.benchmark.methods.monte_carlo`) using the [Rastrigin function](https://en.wikipedia.org/wiki/Rastrigin_function). Fig. 2 shows mean results from five runs for each case. The main parameters were as follows:
 - population = 100,
 - maximum number of generations = 1000,
 - tolerance = 1e-3,
@@ -119,7 +127,7 @@ Note that unlike in `modestga`, in Differentian Evolution the population size is
 
 <p align="center">
 <img src="modestga/benchmark/results/comparison.png" align="center">
-<div align="center">Figure 1: Comparison results</div>
+<div align="center">Figure 2: Comparison to other methods</div>
 </p>
 
 Summary:
@@ -129,3 +137,8 @@ Summary:
 
 ### Number of CPUs vs. computing time
 To be added soon...
+
+<p align="center">
+<img src="modestga/benchmark/results/parallel_results.png" align="center">
+<div align="center">Figure 3: Parallel minimization performance</div>
+</p>
