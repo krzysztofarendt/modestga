@@ -10,11 +10,11 @@ from modestga import operators
 from modestga import population
 
 
-logging.basicConfig(
-    level='DEBUG',
-    filemode='w',
-    format="[%(processName)s][%(levelname)s] %(message)s"
-)
+# logging.basicConfig(
+#     level='DEBUG',
+#     filemode='w',
+#     format="[%(processName)s][%(levelname)s] %(message)s"
+# )
 
 
 def norm(x, bounds):
@@ -99,6 +99,11 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}, workers=o
             opts[k] = options[k]
         else:
             raise KeyError("Option '{}' not found".format(k))
+
+    # Assertions
+    assert opts['trm_size'] < opts['pop_size'] // workers, \
+        "Tournament size has to be smaller than population divided " + \
+        "by number of workers"
 
     # Multiprocessing
     if workers <= 1:
@@ -362,8 +367,7 @@ if __name__ == "__main__":
     }
     def callback(x, fx, ng, *args):
         """Callback function called after each generation"""
-        # print(f"\nCallback example:\nx=\n{x}\nf(x)={fx}\n")
-        pass
+        print(f"\nCallback example:\nx=\n{x}\nf(x)={fx}\n")
 
     t0 = time.perf_counter()
     res = minimize(fun, bounds, callback=callback, options=options, workers=4)
