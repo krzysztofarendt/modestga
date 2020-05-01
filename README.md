@@ -11,8 +11,8 @@ Main features:
 - suitable for large-scale non-convex problems,
 - pure Python, so easy to adapt to own needs.
 
-By **default** `modestga.minimize()` runs on all CPUs and divides the population to smaller subpopulations (1 per CPU)
-which exchange genes among one another at each generation. Alternatively, it can be run in a simplified parallel mode in which an exact copy of the initial population runs in parallel on each CPU and the best result among all is returned (function `modestga.parallel.simple.minimize()`).
+By **default** `modestga.minimize()` runs on all CPUs and divides the population into smaller subpopulations (1 per CPU)
+which exchange genes among one another at each generation. Alternatively, it can be run in a simplified parallel mode in which an exact copy of the initial population runs in parallel on each CPU and the best result among all is returned (`modestga.parallel.simple.minimize()`).
 
 ## Installation
 ```
@@ -133,7 +133,7 @@ Summary:
 
 ### Number of CPUs vs. computing time
 
-The performance of the parallel optimization was evaluated using a 128-dimensional [Rastrigin function](https://en.wikipedia.org/wiki/Rastrigin_function). Since the function evaluation is quite fast, there was small increase in performance in cases with more than 4 CPUs. The optimum number of CPUs to use depends mainly on the function evaluation time.
+The performance of the parallel optimization was evaluated using a 128-dimensional [Rastrigin function](https://en.wikipedia.org/wiki/Rastrigin_function). Since the function evaluation is quite fast, there was small increase in performance in cases with more than 4 CPUs. The optimum number of CPUs depends mainly on the function evaluation time.
 
 <p align="center">
 <img src="modestga/benchmark/results/comparison_parallel.png" align="center">
