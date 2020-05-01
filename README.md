@@ -87,9 +87,8 @@ def callback(x, fx, ng, *args):
     """Callback function called after each generation"""
     print(f"\nx={x}\nf(x)={fx}\n")
 
-# Minimize
-# (it uses all available CPUs by default)
-res = minimize(fun, bounds, callback=callback, options=options)
+# Minimize using 3 CPUs
+res = minimize(fun, bounds, callback=callback, options=options, workers=3)
 
 # Print optimization result
 print(res)
