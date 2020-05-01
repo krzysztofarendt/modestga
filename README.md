@@ -28,6 +28,36 @@ Run example (50-dimensional [Rastrigin function](https://en.wikipedia.org/wiki/R
 ```
 
 ## Example
+
+Minimal:
+```python
+import random
+import numpy as np
+from modestga import minimize
+
+# Define function to be minimized (can be noisy)
+def fun(x, *args):
+    return np.sum(x ** 2) + random.random()
+
+# Specify parameter bounds (here: 100 parameters allowed to vary from 0 to 10)
+bounds = [(0, 10) for i in range(100)]
+
+# Overwrite default evolution options
+options = {
+    'generations': 1000,    # Max. number of generations
+    'pop_size': 500         # Population size
+}
+
+# Minimize
+# (it uses all available CPUs by default)
+res = minimize(fun, bounds, options=options)
+
+# Print optimization result
+print(res)
+```
+
+
+Extended:
 ```python
 import logging
 import random
@@ -53,9 +83,13 @@ options = {
     'tol': 1e-3             # Solution tolerance
 }
 
+def callback(x, fx, ng, *args):
+    """Callback function called after each generation"""
+    print(f"\nx={x}\nf(x)={fx}\n")
+
 # Minimize
 # (it uses all available CPUs by default)
-res = minimize(fun, bounds, options=options)
+res = minimize(fun, bounds, callback=callback, options=options)
 
 # Print optimization result
 print(res)
