@@ -41,6 +41,8 @@ The Monte Carlo method did not take into account the tolerance and was simply st
 
 Note that unlike in `modestga`, in Differentian Evolution the population size is multiplied by the number of parameters. For exact meaning of the mutation parameter in Differential Evolution please refer to the SciPy documention.
 
+<img src="modestga/benchmark/results/comparison.png" align="center">
+
 ![Comparison](modestga/benchmark/results/comparison.png)
 
 Summary:
