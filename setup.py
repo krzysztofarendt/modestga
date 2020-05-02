@@ -15,7 +15,8 @@ setup(name='modestga',
       install_requires=[
           'numpy>=1.18.2',
           'matplotlib>=3.2.1',
-          'scipy>=1.4.1'
+          'scipy>=1.4.1',
+          'cloudpickle'
       ],
       classifiers = [
           'Programming Language :: Python :: 3',
