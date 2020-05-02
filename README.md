@@ -26,9 +26,9 @@ pip install -e .
 ```
 
 ## Test
-Run example (50-dimensional [Rastrigin function](https://en.wikipedia.org/wiki/Rastrigin_function) minimization):
-```python
->>> from modestga.examples import min_rastrigin_fun
+Clone repository and run the example (50-dimensional [Rastrigin function](https://en.wikipedia.org/wiki/Rastrigin_function) minimization):
+```
+python modestga/examples/min_rastrigin_fun.py
 ```
 
 ## Example
