@@ -308,6 +308,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}, workers=o
     if parallel:
         end_event.set()
         for proc, pipe in zip(processes, pipes):
+            log.debug(f"Closing {pipe} and joining {proc}")
             pipe.close()
             proc.join()
 
@@ -320,8 +321,6 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}, workers=o
         nfev = nfev,
         fx = fittest.val
     )
-
-    # log.info(res)
 
     return res
 
