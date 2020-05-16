@@ -33,11 +33,8 @@ def parallel_pop(pipe,
         if pipe.poll(0.01):
             # Get data
             try:
-                log.debug('Waiting for data')
                 data = pipe.recv()
-                log.debug('Data received')
             except EOFError:
-                log.debug('Other side of the pipe closed')
                 break
             scale = data['scale']
             pop.set_genes(data['genes'])
