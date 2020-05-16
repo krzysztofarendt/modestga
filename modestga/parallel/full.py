@@ -1,3 +1,4 @@
+import os
 import cloudpickle
 import numpy as np
 import logging
@@ -18,7 +19,8 @@ def parallel_pop(pipe,
                  mut_rate,
                  end_event):
     """Subpopulation used in parallel GA."""
-    logging.debug("Starting process")
+    log = logging.getLogger(name=f'parallel_pop[PID={os.getpid()}]')
+    log.debug("Starting process")
 
     # Unpickle function
     fun = cloudpickle.loads(pickled_fun)
@@ -27,39 +29,41 @@ def parallel_pop(pipe,
     pop = population.Population(pop_size, bounds, fun, evaluate=False)
 
     while not end_event.is_set():
-        # Get data
-        try:
-            data = pipe.recv()
-        except EOFError:
-            break
-        scale = data['scale']
-        pop.set_genes(data['genes'])
-        pop.set_fx(data['fx'])
+        # Check if there's some data
+        if pipe.poll(0.01):
+            # Get data
+            try:
+                data = pipe.recv()
+            except EOFError:
+                break
+            scale = data['scale']
+            pop.set_genes(data['genes'])
+            pop.set_fx(data['fx'])
 
-        # Generate children
-        children = list()
-        fx = list()
+            # Generate children
+            children = list()
+            fx = list()
 
-        while len(children) < pop_size:
-            #Cross-over
-            i1, i2 = operators.tournament(pop, trm_size)
-            child = operators.crossover(i1, i2, xover_ratio)
+            while len(children) < pop_size:
+                #Cross-over
+                i1, i2 = operators.tournament(pop, trm_size)
+                child = operators.crossover(i1, i2, xover_ratio)
 
-            # Mutation
-            child = operators.mutation(child, mut_rate, scale)
+                # Mutation
+                child = operators.mutation(child, mut_rate, scale)
 
-            # Evaluate f(x)
-            child.evaluate()
+                # Evaluate f(x)
+                child.evaluate()
 
-            # Add to children
-            children.append(child)
-            fx.append(child.val)
+                # Add to children
+                children.append(child)
+                fx.append(child.val)
 
-        # Return data (new genes) to the main process
-        pop.ind = children
-        data = dict()
-        data['genes'] = pop.get_genes()
-        data['fx'] = fx
-        pipe.send(data)
+            # Return data (new genes) to the main process
+            pop.ind = children
+            data = dict()
+            data['genes'] = pop.get_genes()
+            data['fx'] = fx
+            pipe.send(data)
 
     pipe.close()
