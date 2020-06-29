@@ -10,13 +10,6 @@ from modestga import operators
 from modestga import population
 
 
-# logging.basicConfig(
-#     level='DEBUG',
-#     filemode='w',
-#     format="[%(processName)s][%(levelname)s] %(message)s"
-# )
-
-
 def norm(x, bounds):
     """
     Normalize `x` with respect to `bounds`.
@@ -37,7 +30,7 @@ def norm(x, bounds):
     return n
 
 
-def minimize(fun, bounds, x0=None, args=(), callback=None, options={}, workers=os.cpu_count()-1):
+def minimize(fun, bounds, x0=None, args=(), callback=None, options={}, workers=None):
     """Minimizes `fun` using Genetic Algorithm.
 
     If `x0` is given, the initial population will contain one individual
@@ -72,13 +65,17 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}, workers=o
     :param args: tuple, positional arguments to be passed to `fun` and to `callback`
     :param callback: function, called after every generation
     :param options: dict, GA options
-    :param workers: int, number of processes to use
+    :param workers: int, number of processes to use (will use all CPUs if None)
     :return: OptRes, optimization result
     """
     log = logging.getLogger(name='minimize(GA)')
     log.info('Start minimization')
 
     np.set_printoptions(precision=3)
+
+    # Assign number of workers
+    if workers is None:
+        workers = os.cpu_count() - 1
 
     # Function evaluation counter
     nfev = 0
@@ -100,10 +97,30 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}, workers=o
         else:
             raise KeyError("Option '{}' not found".format(k))
 
-    # Assertions
-    assert opts['trm_size'] < opts['pop_size'] // workers, \
-        "Tournament size has to be smaller than population divided " + \
-        "by number of workers"
+    # Auto-adjust rules
+    if ('pop_size' not in options) and (opts['pop_size'] < workers * 4):
+        opts['pop_size'] = workers * 4
+
+    if ('trm_size' not in options) and \
+       (opts['trm_size'] > opts['pop_size'] // (workers * 4)):
+        init_trm_size = opts['trm_size']
+        opts['trm_size'] = opts['pop_size'] // (workers * 4)
+        msg = (
+            "Tournament size decreased due to small population: "
+            f"{init_trm_size} -> {opts['trm_size']}"
+        )
+        log.warning(msg)
+
+    # Assertions (detect incorrect settings)
+    assert opts['pop_size'] >= (workers * 4), \
+        f"Population size ({opts['pop_size']}) should be " + \
+        "at least 4x larger than " + \
+        f"the number of workers ({workers})"
+
+    assert opts['trm_size'] < (opts['pop_size'] // workers), \
+        f"Tournament size ({opts['trm_size']}) has to be smaller " + \
+        "than population divided by number of workers " + \
+        f"({opts['pop_size']}/{workers})"
 
     # Multiprocessing
     if workers <= 1:
@@ -185,7 +202,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}, workers=o
         # Fill other slots with children
         if not parallel:
             # Single process
-    
+
             # Initialize children
             children = list()
 
@@ -225,7 +242,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}, workers=o
                 for j in range(subpop_size):
                     subpop_genes[i].append(all_genes[i * subpop_size + j])
                     subpop_fx[i].append(all_fx[i * subpop_size + j])
-            
+
             # Send data to workers
             for i in range(workers):
                 data_to.append(dict())
@@ -356,6 +373,11 @@ class OptRes:
 
 if __name__ == "__main__":
     # Example
+    logging.basicConfig(
+        level='DEBUG',
+        filemode='w',
+        format="[%(processName)s][%(levelname)s] %(message)s"
+    )
     from modestga.benchmark.functions import rastrigin
     fun = rastrigin
     bounds = [(-5.12, 5.12) for i in range(128)]
