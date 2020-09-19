@@ -305,9 +305,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}, workers=N
 
         # Break if successful, i.e. f(x) = 0
         if fittest.val < opts['tol']:
-            exitmsg = \
-                "Solution found, f(x) < 0 + tol" \
-                .format(nstalled)
+            exitmsg = "Solution found, f(x) < 0 + tol"
             break
 
         # Break if stalled
