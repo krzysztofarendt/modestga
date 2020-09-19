@@ -1,4 +1,5 @@
 *.log
+*.swp
 *.yaml
 
 # Byte-compiled / optimized / DLL files
