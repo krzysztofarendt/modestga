@@ -10,7 +10,6 @@ from modestga import population
 from modestga import operators
 from modestga import ga
 
-logging.basicConfig(filename="test.log", level="INFO", filemode="w")
 
 class TestModestga(unittest.TestCase):
 
@@ -92,7 +91,7 @@ class TestModestga(unittest.TestCase):
         except AssertionError as e:
             # Tournament size has to be lower than population/2
             # This exception is fine
-            print(f"\nAssertionError caught: '{e}'")
+            print(f"\nAssertionError caught (it's OK): '{e}'")
             pass
 
         t1, t2 = operators.tournament(pop, 10)
@@ -123,6 +122,22 @@ class TestModestga(unittest.TestCase):
         self.assertEqual(opt2.fx, self.fun(opt2.x))
         self.assertLessEqual(opt2.fx, opt1.fx)
 
+        # Test small population size
+        options = {'generations': 2, 'pop_size': 4, 'trm_size': 1}
+        opt3 = ga.minimize(self.fun,
+                           bounds,
+                           x0=x0,
+                           options=options,
+                           workers=1)
+
+        # Test pop_size and trm_size re-adjusting
+        options = {'generations': 2, 'pop_size': 8}
+        opt4 = ga.minimize(self.fun,
+                           bounds,
+                           x0=x0,
+                           options=options,
+                           workers=2)
+
         # Test convergence
         options['generations'] = 100
         options['mut_rate'] = 0.01
@@ -130,7 +145,7 @@ class TestModestga(unittest.TestCase):
         self.assertLess(opt.fx, 0.1)
 
         # Test callback
-        options['generations'] = 5
+        options = {'generations': 5, 'pop_size': 8, 'trm_size': 1}
         def cb(x, fx, ng):
             print("Generation #{}".format(ng))
             print("x = {}".format(x))
@@ -139,10 +154,11 @@ class TestModestga(unittest.TestCase):
             global x_last
             fx_last = fx
             x_last = x
-        opt = ga.minimize(self.fun, bounds, callback=cb, options=options)
+        opt = ga.minimize(self.fun, bounds, callback=cb, options=options, workers=2)
         self.assertEqual(fx_last, opt.fx)
         self.assertTrue((np.abs(x_last - opt.x) < 1e-10).all())
 
 
 if __name__ == "__main__":
+    logging.basicConfig(filename="test.log", level="DEBUG", filemode="w")
     unittest.main(verbosity=2)
