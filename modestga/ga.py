@@ -196,7 +196,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}, workers=N
         # Adaptive mutation parameters
         if nstalled > (opts['inertia'] // 3):
             scale *= 0.75                                   # Search closer to current x
-            mut_rate /= 1 - 1 / len(bounds)                 # Mutate more often
+            mut_rate /= 1. - 1. / (len(bounds) + 1.)        # Mutate more often
             mut_rate = 0.5 if mut_rate > 0.5 else mut_rate  # But not more often than 50%
 
         # Fill other slots with children

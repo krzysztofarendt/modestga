@@ -158,6 +158,15 @@ class TestModestga(unittest.TestCase):
         self.assertEqual(fx_last, opt.fx)
         self.assertTrue((np.abs(x_last - opt.x) < 1e-10).all())
 
+    def test_ga_1param(self):
+        x0 = [5]
+        bounds = tuple([(0, 10) for i in x0])
+        options = {'generations': 20, 'pop_size': 4, 'trm_size': 1}
+        res = ga.minimize(self.fun,
+                          bounds,
+                          x0=x0,
+                          options=options,
+                          workers=1)
 
 if __name__ == "__main__":
     logging.basicConfig(filename="test.log", level="DEBUG", filemode="w")
