@@ -1,3 +1,4 @@
+"""This parallel mode is DEPRECATED. Use modestga.minimize() instead."""
 from multiprocessing import Process, Queue
 import queue
 import os
@@ -69,7 +70,7 @@ class SimpleParallel:
 
         # All results to dataframe
         df = pd.DataFrame(all_results).sort_values('fx')
-        
+
         logging.info(f"Results from all processes:\n{df}")
 
         return df
