@@ -208,6 +208,30 @@ class TestModestga(unittest.TestCase):
                           options=options,
                           workers=2)
 
+    def test_exotic_pickling(self):
+        x0 = tuple(np.random.random(8))
+        bounds = tuple([(-1, 1) for i in x0])
+        options = {'generations': 3}
+
+        class FunWrapper:
+            def __init__(self, fun_to_apply):
+                self.fun_to_apply = fun_to_apply
+
+        args = [FunWrapper(np.fft.fft)]
+
+        def fun_to_pickle(x, *args):
+            """Some exotic function to be pickled."""
+            fun_wrapper = args[0]
+            x = fun_wrapper.fun_to_apply(x)
+            return self.fun(x)
+
+        res = ga.minimize(fun_to_pickle,
+                          bounds,
+                          x0=x0,
+                          args=args,
+                          options=options,
+                          workers=2)
+
 
 if __name__ == "__main__":
     logging.basicConfig(filename="test.log", level="DEBUG", filemode="w")
