@@ -168,7 +168,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}, workers=N
             pipes.append(pipe_to)
 
     # Initialize population
-    pop = population.Population(opts['pop_size'], bounds, fun, evaluate=True)
+    pop = population.Population(opts['pop_size'], bounds, fun, args=args, evaluate=True)
     nfev += len(pop.ind)
 
     # Add user guess if present
