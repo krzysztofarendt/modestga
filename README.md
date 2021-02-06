@@ -14,6 +14,8 @@ Main features:
 By **default** `modestga.minimize()` runs on all CPUs and divides the population into smaller subpopulations (1 per CPU)
 which exchange genes among one another at each generation. Alternatively, it can be run in a simplified parallel mode in which an exact copy of the initial population runs in parallel on each CPU and the best result among all is returned (`modestga.parallel.simple.minimize()`).
 
+[![Downloads](https://pepy.tech/badge/modestga)](https://pepy.tech/project/modestga)
+
 ## Installation
 ```
 pip install modestga
