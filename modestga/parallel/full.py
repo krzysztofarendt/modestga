@@ -26,7 +26,7 @@ def parallel_pop(pipe,
     fun = cloudpickle.loads(pickled_fun)
 
     # Initialize population
-    pop = population.Population(pop_size, bounds, fun, evaluate=False)
+    pop = population.Population(pop_size, bounds, fun, args=args, evaluate=False)
 
     while not end_event.is_set():
         # Check if there's some data

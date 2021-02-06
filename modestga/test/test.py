@@ -188,6 +188,26 @@ class TestModestga(unittest.TestCase):
                           options=options,
                           workers=1)
 
+    def test_args_passing_2workers(self):
+        x0 = tuple(np.random.random(5))
+        bounds = tuple([(-1, 5) for i in x0])
+        args = ['arg0_ok', 'arg1_ok']
+        options = {'generations': 3}
+
+        def fun_args_wrapper(x, *args):
+            arg0 = args[0]
+            arg1 = args[1]
+            self.assertEqual(arg0, 'arg0_ok')
+            self.assertEqual(arg1, 'arg1_ok')
+            return self.fun(x)
+
+        res = ga.minimize(fun_args_wrapper,
+                          bounds,
+                          x0=x0,
+                          args=args,
+                          options=options,
+                          workers=2)
+
 
 if __name__ == "__main__":
     logging.basicConfig(filename="test.log", level="DEBUG", filemode="w")
