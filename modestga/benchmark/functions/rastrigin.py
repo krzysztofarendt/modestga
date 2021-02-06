@@ -2,7 +2,7 @@ import numpy as np
 import time
 
 
-def rastrigin(x):
+def rastrigin(x, *args):
     """Rastrigin function to be minimized.
 
     Global minimum y=0 at x=[0, 0, ..., 0].
@@ -13,7 +13,7 @@ def rastrigin(x):
     y = A * n + np.sum(x ** 2 - A * np.cos(2 * np.pi * x))
     return y
 
-def rastrigin_delayed(x):
+def rastrigin_delayed(x, *args):
     """Rastrigin function to be minimized.
 
     Global minimum y=0 at x=[0, 0, ..., 0].
