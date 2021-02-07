@@ -3,7 +3,7 @@ import numpy as np
 from modestga import minimize
 
 
-def con_minimize(fun, bounds, constr=(), pscale=1e3, x0=None, args=(),
+def con_minimize(fun, bounds, constr=(), x0=None, args=(),
                callback=None, options={}, workers=None):
     """Constrained minimization of `fun` using Genetic Algorithm.
 
@@ -26,7 +26,6 @@ def con_minimize(fun, bounds, constr=(), pscale=1e3, x0=None, args=(),
     :param fun: function to be minimized
     :param bounds: tuple, parameter bounds
     :param constr: tuple, functions defining constraints
-    :param pscale: float, penalty scale (the higher, to more important constraints are)
     :param x0: numpy 1D array, initial parameters
     :param args: tuple, positional arguments to be passed to `fun` and to `fcon`
     :param callback: function, called after every generation
@@ -41,15 +40,20 @@ def con_minimize(fun, bounds, constr=(), pscale=1e3, x0=None, args=(),
         fcons = augmented_args[1]   # Constraints
         user_args = augmented_args[2:]  # Arguments
 
+        # Evaluate core function
+        ycore = fcore(x, *user_args)
+
         # Initialize penalty
         penalty = 0.
 
         # Update penalty
         # (the more negative fcon() is, the higher penalty)
         for f in fcons:
-            penalty += np.max([f(x, *user_args) * -1 * pscale, 0.]) ** 2
+            ycon = np.max([f(x, *user_args) * -1., 0.])
+            pscale = ycore / (ycon + 1e-6)
+            penalty += ycon * pscale
 
-        return fcore(x, *user_args) + penalty
+        return ycore + penalty
 
     # Run minimization
     augmented_args = (fun, constr, *args)
