@@ -8,6 +8,7 @@ import cloudpickle
 from modestga import individual
 from modestga import operators
 from modestga import population
+from modestga.optres import OptRes
 
 
 def norm(x, bounds):
@@ -338,35 +339,6 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}, workers=N
     )
 
     return res
-
-
-class OptRes:
-    """
-    Optimization result.
-
-    Instance attributes:
-    - x - numpy 1D array, optimized parameters
-    - message - str, exit message
-    - nfev - int, number of function evaluations
-    - ng - int, number of generations
-    - fx - float, final function value
-    """
-    def __init__(self, x, message, ng, nfev, fx):
-        self.x = x
-        self.message = message
-        self.ng = ng
-        self.nfev = nfev
-        self.fx = fx
-
-    def __str__(self):
-        s = "Optimization result:\n"
-        s += "====================\n"
-        s += "x = {}\n".format(self.x)
-        s += "message = {}\n".format(self.message)
-        s += "ng = {}\n".format(self.ng)
-        s += "nfev = {}\n".format(self.nfev)
-        s += "fx = {}\n".format(self.fx)
-        return s
 
 
 if __name__ == "__main__":

@@ -63,14 +63,15 @@ def constr_min(fun, bounds, constr=(), pscale=1e3, x0=None, args=(),
         options=options,
         workers=workers)
 
+    # Extend result with contraint violation info
+    res.constr = [fcon(res.x, *args) for fcon in constr]
+
     return res
 
 
 if __name__ == "__main__":
 
     # Example of constrained minimization
-    # The solution should be:
-    # x = [2, 1, 0, 0, 0, 0, 0, 0]
 
     # Set up logging
     logging.basicConfig(
