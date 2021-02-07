@@ -1,5 +1,4 @@
 """Example of constrained minimization of the rastrigin function."""
-
 import logging
 from modestga import con_minimize
 
