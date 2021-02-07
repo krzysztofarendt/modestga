@@ -18,8 +18,6 @@ logging.basicConfig(
 )
 
 # Run minimization
-# The algorithm quickly finds the valley, but struggles
-# to reach the global solution at (1, 1).
 res = con_minimize(
     fun=rosenbrock_2par,
     bounds=[(-1.5, 1.5), (-0.5, 2.5)],
