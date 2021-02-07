@@ -3,7 +3,7 @@ import numpy as np
 from modestga import minimize
 
 
-def constr_min(fun, bounds, constr=(), pscale=1e3, x0=None, args=(),
+def con_minimize(fun, bounds, constr=(), pscale=1e3, x0=None, args=(),
                callback=None, options={}, workers=None):
     """Constrained minimization of `fun` using Genetic Algorithm.
 
@@ -104,6 +104,6 @@ if __name__ == "__main__":
     }
 
     # Run minimization
-    res = constr_min(fun, bounds, constr=constr, options=options)
+    res = con_minimize(fun, bounds, constr=constr, options=options)
 
     print(res)
