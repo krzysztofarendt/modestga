@@ -339,28 +339,3 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}, workers=N
     )
 
     return res
-
-
-if __name__ == "__main__":
-    # Example
-    logging.basicConfig(
-        level='DEBUG',
-        filemode='w',
-        format="[%(processName)s][%(levelname)s] %(message)s"
-    )
-    from modestga.benchmark.functions import rastrigin
-    fun = rastrigin
-    bounds = [(-5.12, 5.12) for i in range(128)]
-    options = {
-        'generations': 10,
-        'pop_size': 500,
-        'tol': 1e-3
-    }
-    def callback(x, fx, ng, *args):
-        """Callback function called after each generation"""
-        print(f"\nCallback example:\nx=\n{x}\nf(x)={fx}\n")
-
-    t0 = time.perf_counter()
-    res = minimize(fun, bounds, callback=callback, options=options, workers=4)
-    print(res)
-    print(f"Time: {time.perf_counter() - t0}")
