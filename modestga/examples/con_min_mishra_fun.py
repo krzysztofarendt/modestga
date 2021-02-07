@@ -1,6 +1,6 @@
 """Example of constrained optimization of the Mishra's Bird function.
 
-Global minimum at f(-4.1302, -1.5821) = -106.7645
+Global minimum at f(-3.1302, -1.5821) = -106.7645
 """
 import logging
 import numpy as np
@@ -21,10 +21,7 @@ res = con_minimize(
     fun=mishra_bird,
     bounds=[(-10., 0.), (-6.5, 0.)],
     constr=[mishra_bird_constr],
-    workers=1,
-    options={
-        'tol': 1e-6
-    }
+    workers=1
 )
 
 print(res)
