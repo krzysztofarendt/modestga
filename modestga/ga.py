@@ -8,6 +8,7 @@ import cloudpickle
 from modestga import individual
 from modestga import operators
 from modestga import population
+from modestga.optres import OptRes
 
 
 def norm(x, bounds):
@@ -333,57 +334,3 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}, workers=N
     )
 
     return res
-
-
-class OptRes:
-    """
-    Optimization result.
-
-    Instance attributes:
-    - x - numpy 1D array, optimized parameters
-    - message - str, exit message
-    - nfev - int, number of function evaluations
-    - ng - int, number of generations
-    - fx - float, final function value
-    """
-    def __init__(self, x, message, ng, nfev, fx):
-        self.x = x
-        self.message = message
-        self.ng = ng
-        self.nfev = nfev
-        self.fx = fx
-
-    def __str__(self):
-        s = "Optimization result:\n"
-        s += "====================\n"
-        s += "x = {}\n".format(self.x)
-        s += "message = {}\n".format(self.message)
-        s += "ng = {}\n".format(self.ng)
-        s += "nfev = {}\n".format(self.nfev)
-        s += "fx = {}\n".format(self.fx)
-        return s
-
-
-if __name__ == "__main__":
-    # Example
-    logging.basicConfig(
-        level='DEBUG',
-        filemode='w',
-        format="[%(processName)s][%(levelname)s] %(message)s"
-    )
-    from modestga.benchmark.functions import rastrigin
-    fun = rastrigin
-    bounds = [(-5.12, 5.12) for i in range(128)]
-    options = {
-        'generations': 10,
-        'pop_size': 500,
-        'tol': 1e-3
-    }
-    def callback(x, fx, ng, *args):
-        """Callback function called after each generation"""
-        print(f"\nCallback example:\nx=\n{x}\nf(x)={fx}\n")
-
-    t0 = time.perf_counter()
-    res = minimize(fun, bounds, callback=callback, options=options, workers=4)
-    print(res)
-    print(f"Time: {time.perf_counter() - t0}")

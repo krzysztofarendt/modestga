@@ -5,14 +5,30 @@ Genetic Algorithm with a `scipy`-like interface:
 minimize(fun, bounds, x0=None, args=(), callback=None, options={})
 ```
 
-Main features:
-- parallel,
+**Main features:**
+- single-CPU and parallel modes,
+- rectangular bounds and inequality constraints,
 - adaptive mutation,
 - suitable for large-scale non-convex problems,
-- pure Python, so easy to adapt to own needs.
+- pure Python.
 
-By **default** `modestga.minimize()` runs on all CPUs and divides the population into smaller subpopulations (1 per CPU)
+Two functions are available:
+- `modestga.minimize()` for minimization with simple rectangular bounds on parameters,
+- `modestga.con_minimize()` for full constrained minimization (possibly nonlinear, noncontinuous).
+
+The function `con_minimize()` is a wrapper over `minimize()` and has only one
+extra argument `constr` with a list of constraint functions. The algorithm
+tries to keep the constraint function output larger or equal zero. The constraint
+functions can be nonlinear, noncontinuous, and much more (any Python code is fine).
+
+By **default** `modestga.minimize()` and `modestga.con_minimize()` run on all CPUs
+and divides the population into smaller subpopulations (1 per CPU)
 which exchange genes among one another after each generation.
+
+To use multiple CPUs the cost function (and constraints) must be serializable.
+If you want to minimize some function which cannot be serialized with
+[cloudpickle](https://github.com/cloudpipe/cloudpickle), try running
+the minimization on a single CPU (`workers=1`).
 
 [![Downloads](https://pepy.tech/badge/modestga)](https://pepy.tech/project/modestga)
 
@@ -108,6 +124,11 @@ fx = res.fx
 # Number of function evaluations
 nfev = res.nfev
 ```
+
+For constrained optimization examples check out the following scripts:
+- `modestga/examples/con_min_mishra_fun.py`
+- `modestga/examples/con_min_rosenbrock_fun.py`
+- `modestga/examples/con_min_rastrigin_fun.py`
 
 ## Benchmarks
 
