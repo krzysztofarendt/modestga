@@ -5,7 +5,7 @@ Genetic Algorithm with a `scipy`-like interface:
 minimize(fun, bounds, x0=None, args=(), callback=None, options={})
 ```
 
-Main features:
+**Main features:**
 - parallel,
 - rectangular bounds and inequality constraints,
 - adaptive mutation,
@@ -14,7 +14,7 @@ Main features:
 
 Two functions are available:
 - `modestga.minimize()` for minimization with simple rectangular bounds on parameters,
-- `modestga.con_minimize()` for the full constrained minimization (possibly nonlinear, noncontinuous).
+- `modestga.con_minimize()` for full constrained minimization (possibly nonlinear, noncontinuous).
 
 The function `con_minimize()` is a wrapper over `minimize()` and has only one
 extra argument `constr` with a list of constraint functions. The algorithm
@@ -125,7 +125,7 @@ fx = res.fx
 nfev = res.nfev
 ```
 
-For constrained optimization examples see the following:
+For constrained optimization examples check out the following scripts:
 - `modestga/examples/con_min_mishra_fun.py`
 - `modestga/examples/con_min_rosenbrock_fun.py`
 - `modestga/examples/con_min_rastrigin_fun.py`
