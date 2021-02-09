@@ -65,7 +65,12 @@ class Individual():
         Instead of calling this method,
         you may read the instance attribute `val`.
         """
-        self.val = self.fun(self.get_estimates(), *self.args)
+        try:
+            self.val = self.fun(self.get_estimates(), *self.args)
+        except Exception as e:
+            print(e)
+            self.log.warning(str(e))
+            self.val = 1e8  # Very large value
         return self.val
 
     def copy(self):
