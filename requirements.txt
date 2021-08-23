@@ -29,7 +29,7 @@ mistune==0.8.4
 -e git+https://github.com/krzysztofarendt/modestga@11295a39a3447f3ff4d61e9baa8c4f9ad543c9e3#egg=modestga
 nbconvert==5.6.1
 nbformat==5.0.6
-notebook==6.1.5
+notebook==6.4.1
 numpy==1.18.2
 pandas==1.0.3
 pandocfilters==1.4.2
