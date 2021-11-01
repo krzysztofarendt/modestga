@@ -2,7 +2,7 @@ import logging
 
 import numpy as np
 
-from modestga import minimize
+import modestga
 
 
 def con_minimize(
@@ -10,7 +10,7 @@ def con_minimize(
 ):
     """Constrained minimization of `fun` using Genetic Algorithm.
 
-    This function is a wrapper over modetga.minimize().
+    This function is a wrapper over modestga.minimize().
     The constraints are defined as a tuple of functions
     (`fcon1(x, *args)`, `fcon2(x, *args)`, `...`).
     The algorithm searches for a solution minimizing
@@ -61,7 +61,7 @@ def con_minimize(
     # Run minimization
     augmented_args = (fun, constr, *args)
 
-    res = minimize(
+    res = modestga.minimize(
         fun=fun_soft_con,
         bounds=bounds,
         x0=x0,
