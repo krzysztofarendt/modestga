@@ -3,6 +3,7 @@ import time
 
 import numpy as np
 import yaml
+
 from modestga import ga
 from modestga.benchmark.functions import rastrigin
 from modestga.parallel import simple
@@ -12,7 +13,7 @@ logging.basicConfig(level="INFO")
 
 if __name__ == "__main__":
     # Test name
-    tname = "parallel_results_1"  # Change name and parameters below
+    tname = "parallel_results"  # Change name and parameters below
 
     # Number of tests
     n_tests = 5
