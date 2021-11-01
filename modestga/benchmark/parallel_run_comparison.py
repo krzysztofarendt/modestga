@@ -13,7 +13,7 @@ logging.basicConfig(level="INFO")
 
 if __name__ == "__main__":
     # Test name
-    tname = "parallel_results_1"  # Change name and parameters below
+    tname = "parallel_results"  # Change name and parameters below
 
     # Number of tests
     n_tests = 5
