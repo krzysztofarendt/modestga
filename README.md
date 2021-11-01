@@ -5,7 +5,11 @@
 Genetic Algorithm with a `scipy`-like interface:
 
 ```
-minimize(fun, bounds, x0=None, args=(), callback=None, options={})
+# Minimization with box constraints
+minimize(fun, bounds, x0=None, args=(), callback=None, options={}, workers=None)
+
+# Minimization with box and inequality constraints
+con_minimize(fun, bounds, constr, x0=None, args=(), callback=None, options={}, workers=None)
 ```
 
 **Main features:**
@@ -13,7 +17,8 @@ minimize(fun, bounds, x0=None, args=(), callback=None, options={})
 - rectangular bounds and inequality constraints,
 - adaptive mutation,
 - suitable for large-scale non-convex problems,
-- pure Python.
+- pure Python,
+- continuous testing on latest Ubuntu and Python 3.7, 3.8, 3.9, but should work also on other distros and on Windows.
 
 Two functions are available:
 - `modestga.minimize()` for minimization with simple rectangular bounds on parameters,
