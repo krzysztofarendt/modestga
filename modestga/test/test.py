@@ -18,7 +18,7 @@ class TestModestga(unittest.TestCase):
         random.seed(123)
         np.random.seed(123)
         # Cost function
-        def f(x):
+        def f(x, *args):
             return np.sum(np.array(x) ** 2)
         self.fun = f
 
@@ -231,6 +231,22 @@ class TestModestga(unittest.TestCase):
                           args=args,
                           options=options,
                           workers=2)
+
+    def test_exception_handling(self):
+        x0 = [5]
+        bounds = tuple([(0, 10) for i in x0])
+        options = {'generations': 2, 'pop_size': 4, 'trm_size': 1}
+
+        def fun_exception(x, *args):
+            raise Exception("Dummy Exception")
+            return self.fun(x, *args)
+
+        res = ga.minimize(fun_exception,
+                          bounds,
+                          x0=x0,
+                          options=options,
+                          workers=1)
+
 
 
 if __name__ == "__main__":

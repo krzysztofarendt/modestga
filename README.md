@@ -6,11 +6,11 @@ minimize(fun, bounds, x0=None, args=(), callback=None, options={})
 ```
 
 **Main features:**
-- parallel,
+- single-CPU and parallel modes,
 - rectangular bounds and inequality constraints,
 - adaptive mutation,
 - suitable for large-scale non-convex problems,
-- pure Python, so easy to adapt to own needs.
+- pure Python.
 
 Two functions are available:
 - `modestga.minimize()` for minimization with simple rectangular bounds on parameters,
