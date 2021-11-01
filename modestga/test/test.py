@@ -9,6 +9,10 @@ from modestga import individual
 from modestga import population
 from modestga import operators
 from modestga import ga
+from modestga import minimize
+from modestga import con_minimize
+from modestga.benchmark.functions.mishra_bird import mishra_bird
+from modestga.benchmark.functions.mishra_bird import mishra_bird_constr
 
 
 class TestModestga(unittest.TestCase):
@@ -112,40 +116,40 @@ class TestModestga(unittest.TestCase):
         self.assertTrue((np.abs(n - np.array([0, 0.25, 0.75, 1.0])) < 1e-12).all())
 
         # Test x0 and elitism
-        options = {'generations': 10, 'mut_rate': 0.25}
-        opt1 = ga.minimize(self.fun, bounds, options=options)
+        options = {'generations': 3, 'mut_rate': 0.25}
+        opt1 = minimize(self.fun, bounds, options=options)
         self.assertEqual(opt1.fx, self.fun(opt1.x))
 
-        options = {'generations': 50, 'mut_rate': 0.01}
+        options = {'generations': 10, 'mut_rate': 0.01}
         x0 = opt1.x
-        opt2 = ga.minimize(self.fun, bounds, x0=x0, options=options)
+        opt2 = minimize(self.fun, bounds, x0=x0, options=options)
         self.assertEqual(opt2.fx, self.fun(opt2.x))
         self.assertLessEqual(opt2.fx, opt1.fx)
 
         # Test small population size
-        options = {'generations': 2, 'pop_size': 4, 'trm_size': 1}
-        opt3 = ga.minimize(self.fun,
-                           bounds,
-                           x0=x0,
-                           options=options,
-                           workers=1)
+        options = {'generations': 3, 'pop_size': 4, 'trm_size': 1}
+        opt3 = minimize(self.fun,
+                        bounds,
+                        x0=x0,
+                        options=options,
+                        workers=1)
 
         # Test pop_size and trm_size re-adjusting
-        options = {'generations': 2, 'pop_size': 8}
-        opt4 = ga.minimize(self.fun,
-                           bounds,
-                           x0=x0,
-                           options=options,
-                           workers=2)
+        options = {'generations': 3, 'pop_size': 8}
+        opt4 = minimize(self.fun,
+                        bounds,
+                        x0=x0,
+                        options=options,
+                        workers=2)
 
         # Test convergence
         options['generations'] = 100
         options['mut_rate'] = 0.01
-        opt = ga.minimize(self.fun, bounds)
+        opt = minimize(self.fun, bounds)
         self.assertLess(opt.fx, 0.1)
 
         # Test callback
-        options = {'generations': 5, 'pop_size': 8, 'trm_size': 1}
+        options = {'generations': 3, 'pop_size': 8, 'trm_size': 1}
         def cb(x, fx, ng):
             print("Generation #{}".format(ng))
             print("x = {}".format(x))
@@ -154,19 +158,19 @@ class TestModestga(unittest.TestCase):
             global x_last
             fx_last = fx
             x_last = x
-        opt = ga.minimize(self.fun, bounds, callback=cb, options=options, workers=2)
+        opt = minimize(self.fun, bounds, callback=cb, options=options, workers=2)
         self.assertEqual(fx_last, opt.fx)
         self.assertTrue((np.abs(x_last - opt.x) < 1e-10).all())
 
     def test_ga_1param(self):
         x0 = [5]
         bounds = tuple([(0, 10) for i in x0])
-        options = {'generations': 20, 'pop_size': 4, 'trm_size': 1}
-        res = ga.minimize(self.fun,
-                          bounds,
-                          x0=x0,
-                          options=options,
-                          workers=1)
+        options = {'generations': 3, 'pop_size': 4, 'trm_size': 1}
+        res = minimize(self.fun,
+                       bounds,
+                       x0=x0,
+                       options=options,
+                       workers=1)
 
     def test_args_passing(self):
         x0 = tuple(np.random.random(5))
@@ -181,12 +185,12 @@ class TestModestga(unittest.TestCase):
             self.assertEqual(arg1, 'arg1_ok')
             return self.fun(x)
 
-        res = ga.minimize(fun_args_wrapper,
-                          bounds,
-                          x0=x0,
-                          args=args,
-                          options=options,
-                          workers=1)
+        res = minimize(fun_args_wrapper,
+                       bounds,
+                       x0=x0,
+                       args=args,
+                       options=options,
+                       workers=1)
 
     def test_args_passing_2workers(self):
         x0 = tuple(np.random.random(5))
@@ -201,12 +205,12 @@ class TestModestga(unittest.TestCase):
             self.assertEqual(arg1, 'arg1_ok')
             return self.fun(x)
 
-        res = ga.minimize(fun_args_wrapper,
-                          bounds,
-                          x0=x0,
-                          args=args,
-                          options=options,
-                          workers=2)
+        res = minimize(fun_args_wrapper,
+                       bounds,
+                       x0=x0,
+                       args=args,
+                       options=options,
+                       workers=2)
 
     def test_exotic_pickling(self):
         x0 = tuple(np.random.random(8))
@@ -225,12 +229,12 @@ class TestModestga(unittest.TestCase):
             x = fun_wrapper.fun_to_apply(x)
             return self.fun(x)
 
-        res = ga.minimize(fun_to_pickle,
-                          bounds,
-                          x0=x0,
-                          args=args,
-                          options=options,
-                          workers=2)
+        res = minimize(fun_to_pickle,
+                       bounds,
+                       x0=x0,
+                       args=args,
+                       options=options,
+                       workers=2)
 
     def test_exception_handling(self):
         x0 = [5]
@@ -241,13 +245,29 @@ class TestModestga(unittest.TestCase):
             raise Exception("Dummy Exception")
             return self.fun(x, *args)
 
-        res = ga.minimize(fun_exception,
-                          bounds,
-                          x0=x0,
-                          options=options,
-                          workers=1)
+        res = minimize(fun_exception,
+                       bounds,
+                       x0=x0,
+                       options=options,
+                       workers=1)
 
 
+    def test_con_min(self):
+        # 1 worker
+        res = con_minimize(
+            fun=mishra_bird,
+            bounds=[(-10., 0.), (-6.5, 0.)],
+            constr=[mishra_bird_constr],
+            workers=1,
+            options={"generations": 3},
+        )
+        res = con_minimize(
+            fun=mishra_bird,
+            bounds=[(-10., 0.), (-6.5, 0.)],
+            constr=[mishra_bird_constr],
+            workers=2,
+            options={"generations": 3},
+        )
 
 if __name__ == "__main__":
     logging.basicConfig(filename="test.log", level="DEBUG", filemode="w")
