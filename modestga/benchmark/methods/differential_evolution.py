@@ -1,7 +1,8 @@
 import logging
-from scipy.optimize import differential_evolution
+
 import numpy as np
 from modestga.ga import OptRes
+from scipy.optimize import differential_evolution
 
 
 def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
@@ -35,19 +36,19 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
     :return: OptRes, optimization result
     """
     np.set_printoptions(precision=3)
-    log = logging.getLogger(name='minimize(DE)')
+    log = logging.getLogger(name="minimize(DE)")
 
     opts = {
-        'generations': 1000,
-        'pop_size': 100,
-        'tol': 1e-3,
-        'polish': False,
-        'mut_rate': (0.5, 1)
+        "generations": 1000,
+        "pop_size": 100,
+        "tol": 1e-3,
+        "polish": False,
+        "mut_rate": (0.5, 1),
     }
 
     for k in options:
         if k in opts:
-            log.info('Override default option: {}={}'.format(k, options[k]))
+            log.info("Override default option: {}={}".format(k, options[k]))
             opts[k] = options[k]
         else:
             raise KeyError("Option '{}' not found".format(k))
@@ -56,13 +57,13 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
         fun,
         bounds,
         args,
-        maxiter=opts['generations'],
-        popsize=opts['pop_size'],
-        tol=opts['tol'],
-        mutation=opts['mut_rate'],
+        maxiter=opts["generations"],
+        popsize=opts["pop_size"],
+        tol=opts["tol"],
+        mutation=opts["mut_rate"],
         polish=False,
         disp=True,
-        workers=1
+        workers=1,
     )
 
     res = OptRes(
@@ -70,7 +71,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
         message=res_de.message,
         ng=res_de.nit,
         nfev=res_de.nfev,
-        fx=res_de.fun
+        fx=res_de.fun,
     )
 
     return res
@@ -78,7 +79,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
 
 if __name__ == "__main__":
     # Example
-    logging.basicConfig(level='INFO')
+    logging.basicConfig(level="INFO")
 
     from modestga.benchmark.functions import rastrigin
 

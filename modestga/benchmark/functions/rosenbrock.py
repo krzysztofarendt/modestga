@@ -17,18 +17,18 @@ def rosenbrock_2par(x, *args):
     Reference:
     https://en.wikipedia.org/wiki/Test_functions_for_optimization
     """
-    fx = (1. - x[0]) ** 2 + 100. * (x[1] - x[0] ** 2) ** 2
+    fx = (1.0 - x[0]) ** 2 + 100.0 * (x[1] - x[0] ** 2) ** 2
 
     return fx
 
 
 def rosenbrock_constr1(x, *args):
     """First constraint for rosenbrock_2par()."""
-    fx = (x[0] - 1.) ** 3 - x[1] + 1.
-    return fx * -1.
+    fx = (x[0] - 1.0) ** 3 - x[1] + 1.0
+    return fx * -1.0
 
 
 def rosenbrock_constr2(x, *args):
     """Second constraint for rosenbrock_2par()."""
-    fx = x[0] + x[1] - 2.
-    return fx * -1.
+    fx = x[0] + x[1] - 2.0
+    return fx * -1.0

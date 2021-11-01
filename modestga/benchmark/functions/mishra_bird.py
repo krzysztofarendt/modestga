@@ -16,8 +16,11 @@ def mishra_bird(x, *args):
     Reference:
     https://en.wikipedia.org/wiki/Test_functions_for_optimization
     """
-    fx = np.sin(x[1]) * np.exp((1 - np.cos(x[0])) ** 2) + \
-         np.cos(x[0]) * np.exp((1 - np.sin(x[1])) ** 2) + (x[0] - x[1]) ** 2
+    fx = (
+        np.sin(x[1]) * np.exp((1 - np.cos(x[0])) ** 2)
+        + np.cos(x[0]) * np.exp((1 - np.sin(x[1])) ** 2)
+        + (x[0] - x[1]) ** 2
+    )
 
     return fx
 

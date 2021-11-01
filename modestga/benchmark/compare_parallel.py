@@ -1,18 +1,18 @@
 import logging
 import time
+
 import numpy as np
 import yaml
-
 from modestga import ga
-from modestga.parallel import simple
 from modestga.benchmark.functions import rastrigin
+from modestga.parallel import simple
 
-logging.basicConfig(level='INFO')
+logging.basicConfig(level="INFO")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Test name
-    tname = 'parallel_results_1'  # Change name and parameters below
+    tname = "parallel_results_1"  # Change name and parameters below
 
     # Number of tests
     n_tests = 5
@@ -31,25 +31,25 @@ if __name__ == '__main__':
 
     # Options
     options = {
-        'generations': 1000,  # Max. number of generations
-        'pop_size': 1000,      # Population size
-        'tol': 1e-3           # Solution tolerance
+        "generations": 1000,  # Max. number of generations
+        "pop_size": 1000,  # Population size
+        "tol": 1e-3,  # Solution tolerance
     }
 
     # Results
     res = dict()
 
     for i in range(n_tests):
-        k1 = f'run={i}'
+        k1 = f"run={i}"
         res[k1] = dict()
 
         for nw in n_workers:
-            k2 = f'nworkers={nw}'
+            k2 = f"nworkers={nw}"
             res[k1][k2] = dict()
 
             for fun in functions:
-                fname = fun.__module__.split('.')[-1]
-                k3 = f'method={fname}'
+                fname = fun.__module__.split(".")[-1]
+                k3 = f"method={fname}"
                 res[k1][k2][k3] = dict()
 
                 opts = options.copy()
@@ -59,14 +59,14 @@ if __name__ == '__main__':
                 out = fun(rastrigin, bounds, x0=None, options=opts, workers=nw)
                 elapsed_t = time.perf_counter() - t0
 
-                res[k1][k2][k3]['f(x)'] = float(out.fx)
-                res[k1][k2][k3]['x'] = out.x.tolist()
-                res[k1][k2][k3]['nfev'] = int(out.nfev)
-                res[k1][k2][k3]['ng'] = int(out.ng)
-                res[k1][k2][k3]['message'] = str(out.message)
-                res[k1][k2][k3]['time'] = elapsed_t
+                res[k1][k2][k3]["f(x)"] = float(out.fx)
+                res[k1][k2][k3]["x"] = out.x.tolist()
+                res[k1][k2][k3]["nfev"] = int(out.nfev)
+                res[k1][k2][k3]["ng"] = int(out.ng)
+                res[k1][k2][k3]["message"] = str(out.message)
+                res[k1][k2][k3]["time"] = elapsed_t
 
-                with open(f'modestga/benchmark/results/{tname}.yaml', 'w') as yaml_file:
+                with open(f"modestga/benchmark/results/{tname}.yaml", "w") as yaml_file:
                     yaml.dump(res, yaml_file)
 
-    print('Finished!')
+    print("Finished!")

@@ -4,12 +4,13 @@ The optimization result is presented as an interactive matplotlib
 chart, so make sure you have an X11 server running if you're on Linux.
 """
 import logging
-import numpy as np
+
 import matplotlib.pyplot as plt
+import numpy as np
 from modestga import minimize
 
+logging.basicConfig(filename="ga.log", level="INFO", filemode="w")
 
-logging.basicConfig(filename='ga.log', level='INFO', filemode='w')
 
 def fun(x, *args):
     """Noisy function to be minimized"""
@@ -20,9 +21,9 @@ def callback(x, fx, ng, *args):
     """Callback function called after each generation"""
 
     # Print progress
-    print('Generation #{}'.format(ng))
-    print('    x = {}'.format(x))
-    print('    fx = {}'.format(fx))
+    print("Generation #{}".format(ng))
+    print("    x = {}".format(x))
+    print("    fx = {}".format(fx))
 
     # Save to solution history
     x_hist = args[0]
@@ -46,9 +47,9 @@ if __name__ == "__main__":
     # Plot solution history
     fig, ax = plt.subplots(2, 1, sharex=True)
     ax[0].plot(x_hist)
-    ax[0].set_title('x')
+    ax[0].set_title("x")
     ax[1].plot(fx_hist)
-    ax[1].set_title('f(x) = np.sum(x ** 2)')
-    ax[1].set_xlabel('Generation')
+    ax[1].set_title("f(x) = np.sum(x ** 2)")
+    ax[1].set_xlabel("Generation")
 
     plt.show()
