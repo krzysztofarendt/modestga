@@ -18,8 +18,8 @@ Two functions are available:
 
 The function `con_minimize()` is a wrapper over `minimize()` and has only one
 extra argument `constr` with a list of constraint functions. The algorithm
-tries to keep the constraint function output larger or equal zero. The constraint
-functions can be nonlinear, noncontinuous, and much more (any Python code is fine).
+tries to keep the constraint function output larger or equal to zero. The constraint
+functions can be nonlinear or noncontinuous (actually any Python code is fine).
 
 By **default** `modestga.minimize()` and `modestga.con_minimize()` run on all CPUs
 and divides the population into smaller subpopulations (1 per CPU)
@@ -27,7 +27,7 @@ which exchange genes among one another after each generation.
 
 To use multiple CPUs the cost function (and constraints) must be serializable.
 If you want to minimize some function which cannot be serialized with
-[cloudpickle](https://github.com/cloudpipe/cloudpickle), try running
+[cloudpickle](https://github.com/cloudpipe/cloudpickle), run
 the minimization on a single CPU (`workers=1`).
 
 [![Downloads](https://pepy.tech/badge/modestga)](https://pepy.tech/project/modestga)
