@@ -1,19 +1,19 @@
 """This parallel mode is DEPRECATED. Use modestga.minimize() instead."""
-from multiprocessing import Process, Queue
-import queue
-import os
 import logging
+import os
+import queue
 import time
+from multiprocessing import Process
+from multiprocessing import Queue
 
-import pandas as pd
-import numpy as np
 import cloudpickle
-
 import modestga
-from modestga.ga import OptRes
+import numpy as np
+import pandas as pd
 from modestga.benchmark.functions import rastrigin
+from modestga.ga import OptRes
 
-logging.basicConfig(level='INFO', format="[%(processName)s][%(levelname)s] %(message)s")
+logging.basicConfig(level="INFO", format="[%(processName)s][%(levelname)s] %(message)s")
 
 
 class SimpleParallel:
@@ -22,8 +22,17 @@ class SimpleParallel:
     This is the most simple implementation in which there is no communication
     between processes. Instead, the best final solution is returned.
     """
-    def __init__(self, fun, bounds, x0=None, args=(),
-                 callback=None, options={}, workers=os.cpu_count() - 1):
+
+    def __init__(
+        self,
+        fun,
+        bounds,
+        x0=None,
+        args=(),
+        callback=None,
+        options={},
+        workers=os.cpu_count() - 1,
+    ):
 
         self.pickled_fun = cloudpickle.dumps(fun)
         self.bounds = bounds
@@ -39,15 +48,18 @@ class SimpleParallel:
         all_results = list()
         for i in range(self.workers):
             pid = i
-            p = Process(target=SimpleParallel._optimization_process,
-                        args=(self.pickled_fun,
-                              self.bounds,
-                              self.x0,
-                              self.pickled_args,
-                              self.pickled_callback,
-                              self.options,
-                              self.queue,
-                              pid)
+            p = Process(
+                target=SimpleParallel._optimization_process,
+                args=(
+                    self.pickled_fun,
+                    self.bounds,
+                    self.x0,
+                    self.pickled_args,
+                    self.pickled_callback,
+                    self.options,
+                    self.queue,
+                    pid,
+                ),
             )
             p.start()
             processes.append(p)
@@ -69,16 +81,16 @@ class SimpleParallel:
             p.join()
 
         # All results to dataframe
-        df = pd.DataFrame(all_results).sort_values('fx')
+        df = pd.DataFrame(all_results).sort_values("fx")
 
         logging.info(f"Results from all processes:\n{df}")
 
         return df
 
     @staticmethod
-    def _optimization_process(pickled_fun, bounds, x0,
-                              pickled_args, pickled_callback, options,
-                              queue, pid):
+    def _optimization_process(
+        pickled_fun, bounds, x0, pickled_args, pickled_callback, options, queue, pid
+    ):
         fun = cloudpickle.loads(pickled_fun)
         args = cloudpickle.loads(pickled_args)
         callback = cloudpickle.loads(pickled_callback)
@@ -86,19 +98,20 @@ class SimpleParallel:
         result = modestga.minimize(fun, bounds, x0, args, callback, options, workers=1)
 
         result_dict = {
-            'pid': pid,
-            'x': result.x,
-            'message': result.message,
-            'ng': result.ng,
-            'nfev': result.nfev,
-            'fx': result.fx
+            "pid": pid,
+            "x": result.x,
+            "message": result.message,
+            "ng": result.ng,
+            "nfev": result.nfev,
+            "fx": result.fx,
         }
 
         queue.put(result_dict, block=True, timeout=5)
 
 
-def minimize(fun, bounds, x0=None, args=(), callback=None, options={},
-             workers=os.cpu_count() - 1):
+def minimize(
+    fun, bounds, x0=None, args=(), callback=None, options={}, workers=os.cpu_count() - 1
+):
     """Wrapper over SimpleParallel providing same interface as modestga.minimize()"""
 
     pmin = SimpleParallel(fun, bounds, x0, args, callback, options, workers)
@@ -106,11 +119,11 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={},
     best_res = res.iloc[0]  # Beacuse df is sorted by fx in ascending order
 
     res = OptRes(
-        x = best_res['x'],
-        message = best_res['message'],
-        ng = best_res['ng'],
-        nfev = best_res['nfev'],
-        fx = best_res['fx']
+        x=best_res["x"],
+        message=best_res["message"],
+        ng=best_res["ng"],
+        nfev=best_res["nfev"],
+        fx=best_res["fx"],
     )
     return res
 
@@ -118,13 +131,11 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={},
 if __name__ == "__main__":
     # Example
     from modestga.benchmark.functions import rastrigin
+
     fun = rastrigin
     bounds = [(-5.12, 5.12) for i in range(64)]
-    options = {
-        'generations': 100,
-        'pop_size': 100,
-        'tol': 1e-3
-    }
+    options = {"generations": 100, "pop_size": 100, "tol": 1e-3}
+
     def callback(x, fx, ng, *args):
         """Callback function called after each generation"""
         # print(f"\nCallback example:\nx=\n{x}\nf(x)={fx}\n")

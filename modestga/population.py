@@ -1,12 +1,13 @@
 import logging
+
 import numpy as np
+
 from modestga.individual import Individual
 
 
-class Population():
-
+class Population:
     def __init__(self, size, bounds, fun, args=(), genes=None, evaluate=True):
-        self.log = logging.getLogger('Population')
+        self.log = logging.getLogger("Population")
 
         self.ind = list()
 
@@ -25,7 +26,7 @@ class Population():
                     bounds=bounds,
                     fun=fun,
                     args=args,
-                    val=val
+                    val=val,
                 )
             )
 
@@ -60,7 +61,7 @@ class Population():
         return fittest
 
     def __str__(self):
-        s = ''
+        s = ""
         for i in self.ind:
-            s += '{}\n'.format(i)
+            s += "{}\n".format(i)
         return s

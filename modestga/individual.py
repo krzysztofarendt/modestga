@@ -1,4 +1,5 @@
 import logging
+
 import numpy as np
 
 
@@ -7,10 +8,7 @@ def bounds_tuples_to_array(t):
     Convert a list of tuples with bounds into an array with the first
     dimension for lower bounds and the second for upper bounds.
     """
-    a = np.array([
-        [b[0] for b in t],
-        [b[1] for b in t]
-    ])
+    a = np.array([[b[0] for b in t], [b[1] for b in t]])
     return a
 
 
@@ -22,7 +20,7 @@ def bounds_array_to_tuples(a):
     return t
 
 
-class Individual():
+class Individual:
 
     # Total number of instances
     count = 0
@@ -36,7 +34,7 @@ class Individual():
         :param val: Function value or None
         """
         # Set name
-        self.id = 'Ind#{}'.format(Individual.count)
+        self.id = "Ind#{}".format(Individual.count)
         self.log = logging.getLogger(name=self.id)
         Individual.count += 1
 
@@ -75,14 +73,10 @@ class Individual():
 
     def copy(self):
         ind = Individual(
-            self.gen,
-            bounds_array_to_tuples(self.bnd),
-            self.fun,
-            self.args,
-            self.val
+            self.gen, bounds_array_to_tuples(self.bnd), self.fun, self.args, self.val
         )
         return ind
 
     def __str__(self):
-        s = '{}: {} -> {}'.format(self.id, self.gen, self.val)
+        s = "{}: {} -> {}".format(self.id, self.gen, self.val)
         return s

@@ -1,10 +1,13 @@
 import logging
+
 import numpy as np
+
 from modestga import minimize
 
 
-def con_minimize(fun, bounds, constr=(), x0=None, args=(),
-               callback=None, options={}, workers=None):
+def con_minimize(
+    fun, bounds, constr=(), x0=None, args=(), callback=None, options={}, workers=None
+):
     """Constrained minimization of `fun` using Genetic Algorithm.
 
     This function is a wrapper over modetga.minimize().
@@ -36,20 +39,20 @@ def con_minimize(fun, bounds, constr=(), x0=None, args=(),
     # Wrap cost function with constraints
     def fun_soft_con(x, *augmented_args):
         # Unpack constraints and arguments
-        fcore = augmented_args[0]   # Function to be minimized
-        fcons = augmented_args[1]   # Constraints
+        fcore = augmented_args[0]  # Function to be minimized
+        fcons = augmented_args[1]  # Constraints
         user_args = augmented_args[2:]  # Arguments
 
         # Evaluate core function
         ycore = fcore(x, *user_args)
 
         # Initialize penalty
-        penalty = 0.
+        penalty = 0.0
 
         # Update penalty
         # (the more negative fcon() is, the higher penalty)
         for f in fcons:
-            ycon = np.max([f(x, *user_args) * -1., 0.])
+            ycon = np.max([f(x, *user_args) * -1.0, 0.0])
             pscale = ycore / (ycon + 1e-6)
             penalty += ycon * pscale
 
@@ -65,7 +68,8 @@ def con_minimize(fun, bounds, constr=(), x0=None, args=(),
         args=augmented_args,
         callback=callback,
         options=options,
-        workers=workers)
+        workers=workers,
+    )
 
     # Extend result with contraint violation info
     res.constr = [fcon(res.x, *args) for fcon in constr]

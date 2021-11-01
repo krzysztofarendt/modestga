@@ -1,4 +1,5 @@
 import logging
+
 import numpy as np
 from modestga.ga import OptRes
 
@@ -25,7 +26,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
     :return: OptRes, optimization result
     """
     np.set_printoptions(precision=3)
-    log = logging.getLogger(name='minimize(MC)')
+    log = logging.getLogger(name="minimize(MC)")
 
     def norm(x: np.array, b: np.array) -> np.array:
         """Normalizes x with respect to bounds."""
@@ -33,21 +34,19 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
 
     def random_x(b: np.array):
         """Returns random parameters within bounds `b`."""
-        rx = norm(
-            np.random.uniform(low=0., high=1., size=bounds.shape[0]),
-            b)
+        rx = norm(np.random.uniform(low=0.0, high=1.0, size=bounds.shape[0]), b)
         return rx
 
     opts = {
-        'generations': 1000,  # Max. number of generations
-        'pop_size': 100,      # Population size
-        'tol': 1e-3,          # Solution tolerance
-        'inertia': 1000,      # Max. number of non-improving generations
+        "generations": 1000,  # Max. number of generations
+        "pop_size": 100,  # Population size
+        "tol": 1e-3,  # Solution tolerance
+        "inertia": 1000,  # Max. number of non-improving generations
     }
 
     for k in options:
         if k in opts:
-            log.info('Override default option: {}={}'.format(k, options[k]))
+            log.info("Override default option: {}={}".format(k, options[k]))
             opts[k] = options[k]
         else:
             raise KeyError("Option '{}' not found".format(k))
@@ -58,7 +57,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
     bounds = np.array(bounds)
 
     # Initial population
-    pop_size = opts['pop_size']
+    pop_size = opts["pop_size"]
     n_params = bounds.shape[0]
 
     xall = np.zeros((pop_size, n_params))
@@ -77,8 +76,8 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
         yall[i] = fun(xall[i], *args)
 
     # Optimize
-    tries = opts['inertia']
-    count = 1        # 1, because initial pass finished
+    tries = opts["inertia"]
+    count = 1  # 1, because initial pass finished
     nfev = pop_size  # pop_size, because initial pass finished
     exitmsg = ""
     ybest = yall.min()
@@ -86,7 +85,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
     ybest_prev = np.array(ybest)
     xbest_prev = np.array(xbest)
 
-    while tries > 0 and count < opts['generations']:
+    while tries > 0 and count < opts["generations"]:
 
         # Generate new population
         xall = np.zeros((pop_size, n_params))
@@ -104,7 +103,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
         xbest = xall[np.argmin(yall), :]
 
         # Solution improved?
-        if ybest_prev - ybest > opts['tol']:
+        if ybest_prev - ybest > opts["tol"]:
             # Yes
             ybest_prev = ybest
             xbest_prev = xbest
@@ -120,7 +119,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
         # Exit message
         if tries == 0:
             exitmsg = f"Max. number of tries ({opts['inertia']}) reached"
-        if count == opts['generations']:
+        if count == opts["generations"]:
             exitmsg = f"Max. number of iterations ({opts['generations']}) reached"
 
         log.info(f"Iter.{count}: y = {ybest:.5f}")
@@ -129,13 +128,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
         count += 1
 
     # Optimization result
-    res = OptRes(
-        x = xbest,
-        message = exitmsg,
-        ng = count,
-        nfev = nfev,
-        fx = ybest
-    )
+    res = OptRes(x=xbest, message=exitmsg, ng=count, nfev=nfev, fx=ybest)
 
     log.info(res)
 
@@ -144,7 +137,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
 
 if __name__ == "__main__":
     # Example
-    logging.basicConfig(level='INFO')
+    logging.basicConfig(level="INFO")
 
     from modestga.benchmark.functions import rastrigin
 

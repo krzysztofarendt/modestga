@@ -1,5 +1,6 @@
 import logging
 import random
+
 import numpy as np
 
 
@@ -16,11 +17,12 @@ def crossover(ind1, ind2, uniform=0.5):
 def tournament(pop, size):
     # log = logging.getLogger('tournament')
 
-    assert size * 2 < len(pop.ind), \
-        f"Tournament size ({size}) has to be lower than population ({len(pop.ind)}) // 2"
+    assert size * 2 < len(
+        pop.ind
+    ), f"Tournament size ({size}) has to be lower than population ({len(pop.ind)}) // 2"
 
     # Form groups
-    g1g2 = np.random.choice(pop.ind, size=size*2, replace=False)
+    g1g2 = np.random.choice(pop.ind, size=size * 2, replace=False)
     group1 = g1g2[:size]
     group2 = g1g2[size:]
 
@@ -53,8 +55,8 @@ def mutation(ind, rate, scale):
     # Draw new random genes from a normal distribution
     mut_gen = np.random.normal(loc=ind.gen, scale=scale)
     # To 0-1 range
-    mut_gen = np.where(mut_gen > 1., 1., mut_gen)
-    mut_gen = np.where(mut_gen < 0., 0., mut_gen)
+    mut_gen = np.where(mut_gen > 1.0, 1.0, mut_gen)
+    mut_gen = np.where(mut_gen < 0.0, 0.0, mut_gen)
     # Substitute genes where mut < rate
     new_gen = np.where(mut < rate, mut_gen, ind.gen)
 

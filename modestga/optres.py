@@ -1,5 +1,6 @@
 """Optimization result containers."""
 
+
 class OptRes:
     """
     Optimization result.
@@ -12,6 +13,7 @@ class OptRes:
     - fx - float, final function value
     - constr - list of floats, constraint function values (if exist)
     """
+
     def __init__(self, x, message, ng, nfev, fx, constr=None):
         self.x = x
         self.message = message
