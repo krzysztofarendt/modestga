@@ -2,7 +2,7 @@
 
 [![Python package](https://github.com/krzysztofarendt/modestga/actions/workflows/python-package.yml/badge.svg)](https://github.com/krzysztofarendt/modestga/actions/workflows/python-package.yml) [![Downloads](https://pepy.tech/badge/modestga)](https://pepy.tech/project/modestga)
 
-Genetic Algorithm with a `scipy`-like interface:
+Genetic Algorithm with a SciPy-like interface:
 
 ```
 # Minimization with box constraints
