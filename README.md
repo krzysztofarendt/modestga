@@ -1,6 +1,6 @@
 # modestga
 
-[![Python package](https://github.com/krzysztofarendt/modestga/actions/workflows/python-package.yml/badge.svg)](https://github.com/krzysztofarendt/modestga/actions/workflows/python-package.yml)
+[![Python package](https://github.com/krzysztofarendt/modestga/actions/workflows/python-package.yml/badge.svg)](https://github.com/krzysztofarendt/modestga/actions/workflows/python-package.yml) [![Downloads](https://pepy.tech/badge/modestga)](https://pepy.tech/project/modestga)
 
 Genetic Algorithm with a `scipy`-like interface:
 
@@ -32,8 +32,6 @@ To use multiple CPUs the cost function (and constraints) must be serializable.
 If you want to minimize some function which cannot be serialized with
 [cloudpickle](https://github.com/cloudpipe/cloudpickle), run
 the minimization on a single CPU (`workers=1`).
-
-[![Downloads](https://pepy.tech/badge/modestga)](https://pepy.tech/project/modestga)
 
 ## Installation
 ```
