@@ -1,4 +1,7 @@
 # modestga
+
+[![Python package](https://github.com/krzysztofarendt/modestga/actions/workflows/python-package.yml/badge.svg)](https://github.com/krzysztofarendt/modestga/actions/workflows/python-package.yml)
+
 Genetic Algorithm with a `scipy`-like interface:
 
 ```
