@@ -26,8 +26,8 @@ Two functions are available:
 
 The function `con_minimize()` is a wrapper over `minimize()` and has only one
 extra argument `constr` with a list of constraint functions. The algorithm
-tries to keep the constraint function output larger or equal to zero. The constraint
-functions can be nonlinear or noncontinuous (actually any Python code is fine).
+tries to keep the constraint functions outputs above zero. The constraint
+functions can be nonlinear and noncontinuous (actually any Python code is fine).
 
 By **default** `modestga.minimize()` and `modestga.con_minimize()` run on all CPUs
 and divides the population into smaller subpopulations (1 per CPU)
