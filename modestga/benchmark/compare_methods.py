@@ -3,6 +3,7 @@ import time
 
 import numpy as np
 import yaml
+
 from modestga import ga
 from modestga.benchmark.functions import rastrigin
 from modestga.benchmark.methods import differential_evolution
