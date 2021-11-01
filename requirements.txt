@@ -26,7 +26,6 @@ kiwisolver==1.2.0
 MarkupSafe==1.1.1
 matplotlib==3.2.1
 mistune==0.8.4
--e git+https://github.com/krzysztofarendt/modestga@11295a39a3447f3ff4d61e9baa8c4f9ad543c9e3#egg=modestga
 nbconvert==5.6.1
 nbformat==5.0.6
 notebook==6.4.1
