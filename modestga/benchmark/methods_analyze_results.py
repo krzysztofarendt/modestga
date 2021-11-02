@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 def load_df(path):
     # Load data to a dataframe
     with open(path) as f:
-        d = yaml.load(f)
+        d = yaml.safe_load(f)
 
     df = pd.DataFrame(columns=["run", "ndim", "method", "f(x)", "nfev", "ng", "time"])
 
