@@ -1,9 +1,9 @@
 """Analyze results of inter-method comparison.
 """
-import yaml
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
+import yaml
 
 
 def load_df(path):
@@ -11,29 +11,26 @@ def load_df(path):
     with open(path) as f:
         d = yaml.safe_load(f)
 
-    df = pd.DataFrame(columns=["run", "ndim", "method", "f(x)", "nfev", "ng", "time"])
+    df = pd.DataFrame(
+        columns=["run", "ndim", "method", "f(x)", "nfev", "ng", "time"],
+    )
 
-    for k1 in d.keys():
-        for k2 in d[k1].keys():
-            for k3 in d[k1][k2].keys():
-                s = pd.Series(
-                    {
-                        "run": int(k1.split("=")[-1]),
-                        "ndim": int(k2.split("=")[-1]),
-                        "method": k3.split("=")[-1],
-                        "f(x)": float(d[k1][k2][k3]["f(x)"]),
-                        "nfev": float(d[k1][k2][k3]["nfev"]),
-                        "ng": float(d[k1][k2][k3]["ng"]),
-                        "time": float(d[k1][k2][k3]["time"]),
-                        "mut": d[k1][k2][k3]["mut"],
-                    }
-                )
-                df = df.append(s, ignore_index=True)
+    for nsim in d.keys():
+        s = pd.Series(d[nsim])
+        df = df.append(s, ignore_index=True)
+
+    df["run"] = df["run"].astype(int)
+    df["ndim"] = df["ndim"].astype(int)
+    df["f(x)"] = df["f(x)"].astype(float)
+    df["nfev"] = df["nfev"].astype(int)
+    df["ng"] = df["ng"].astype(int)
+    df["time"] = df["time"].astype(float)
 
     return df
 
 
-df = load_df("./modestga/benchmark/results/method_comparison.yaml")
+yaml_path = "./modestga/benchmark/results/method_comparison.yaml"
+df = load_df(yaml_path)
 
 # Calculate average results
 summary = df.groupby(["method", "mut", "ndim"]).mean()
@@ -89,7 +86,7 @@ ax.plot(
     label="mut=(0, 1.9)",
     c="g",
 )
-ax.legend(loc="lower right")
+ax.legend(loc="upper left")
 
 ax = axes[0, 2]
 ax.set_ylim((0, 11000))
@@ -144,7 +141,7 @@ ax.plot(
     label="mut=(0, 1.9)",
     c="g",
 )
-ax.legend(loc="lower right")
+ax.legend(loc="upper left")
 
 ax = axes[1, 2]
 ax.set_ylim((1e3, 1e8))
@@ -200,7 +197,7 @@ ax.plot(
     label="mut=(0, 1.9)",
     c="g",
 )
-ax.legend(loc="lower right")
+ax.legend(loc="upper left")
 
 ax = axes[2, 2]
 ax.set_ylim((0, 8000))

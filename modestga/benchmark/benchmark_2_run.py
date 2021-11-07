@@ -19,7 +19,7 @@ if __name__ == "__main__":
     n_tests = 5
 
     # Number of dimensions
-    n_dims = 128
+    n_dims = 64
 
     # Workers
     n_workers = [1, 2, 3, 4, 5, 6, 7, 8]
