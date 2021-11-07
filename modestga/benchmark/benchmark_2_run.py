@@ -33,7 +33,7 @@ if __name__ == "__main__":
     # Options
     options = {
         "generations": 1000,  # Max. number of generations
-        "pop_size": 1000,  # Population size
+        "pop_size": 300,  # Population size
         "tol": 1e-3,  # Solution tolerance
     }
 
