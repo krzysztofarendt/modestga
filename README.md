@@ -1,8 +1,15 @@
 # modestga
-Genetic Algorithm with a `scipy`-like interface:
+
+[![Python package](https://github.com/krzysztofarendt/modestga/actions/workflows/python-package.yml/badge.svg)](https://github.com/krzysztofarendt/modestga/actions/workflows/python-package.yml) [![Downloads](https://pepy.tech/badge/modestga)](https://pepy.tech/project/modestga)
+
+Genetic Algorithm with a SciPy-like interface:
 
 ```
-minimize(fun, bounds, x0=None, args=(), callback=None, options={})
+# Minimization with box constraints
+minimize(fun, bounds, x0=None, args=(), callback=None, options={}, workers=None)
+
+# Minimization with box and inequality constraints
+con_minimize(fun, bounds, constr, x0=None, args=(), callback=None, options={}, workers=None)
 ```
 
 **Main features:**
@@ -10,7 +17,8 @@ minimize(fun, bounds, x0=None, args=(), callback=None, options={})
 - rectangular bounds and inequality constraints,
 - adaptive mutation,
 - suitable for large-scale non-convex problems,
-- pure Python.
+- pure Python,
+- continuous testing on latest Ubuntu and Python 3.7, 3.8, 3.9, but should work also on other distros and on Windows.
 
 Two functions are available:
 - `modestga.minimize()` for minimization with simple rectangular bounds on parameters,
@@ -18,8 +26,8 @@ Two functions are available:
 
 The function `con_minimize()` is a wrapper over `minimize()` and has only one
 extra argument `constr` with a list of constraint functions. The algorithm
-tries to keep the constraint function output larger or equal to zero. The constraint
-functions can be nonlinear or noncontinuous (actually any Python code is fine).
+tries to keep the constraint functions outputs above zero. The constraint
+functions can be nonlinear and noncontinuous (actually any Python code is fine).
 
 By **default** `modestga.minimize()` and `modestga.con_minimize()` run on all CPUs
 and divides the population into smaller subpopulations (1 per CPU)
@@ -29,8 +37,6 @@ To use multiple CPUs the cost function (and constraints) must be serializable.
 If you want to minimize some function which cannot be serialized with
 [cloudpickle](https://github.com/cloudpipe/cloudpickle), run
 the minimization on a single CPU (`workers=1`).
-
-[![Downloads](https://pepy.tech/badge/modestga)](https://pepy.tech/project/modestga)
 
 ## Installation
 ```
