@@ -162,7 +162,7 @@ Summary:
 
 ### Number of CPUs vs. computing time
 
-The performance of the parallel optimization was evaluated using a 128-dimensional [Rastrigin function](https://en.wikipedia.org/wiki/Rastrigin_function). Since the function evaluation is quite fast, there was small increase in performance in cases with more than 4 CPUs. The optimum number of CPUs depends mainly on the function evaluation time.
+The performance of the parallel optimization was evaluated on a 64-dimensional [Rastrigin function](https://en.wikipedia.org/wiki/Rastrigin_function). Since the evaluation of this function is very fast, multiprocessing is beneficial only up to around 3 CPUs. Beyond that point considerable time is spend on inter-process communication. Thus, the optimum number of CPUs depends mainly on the function evaluation time.
 
 <p align="center">
 <img src="modestga/benchmark/results/comparison_parallel.png" align="center">
