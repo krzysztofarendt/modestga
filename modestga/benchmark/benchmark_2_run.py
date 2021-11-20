@@ -22,7 +22,7 @@ if __name__ == "__main__":
     n_dims = 64
 
     # Workers
-    n_workers = [1, 2, 3, 4, 5, 6, 7, 8]
+    n_workers = [1, 2, 3, 4, 5, 6]
 
     # Functions to test
     functions = [
@@ -32,7 +32,7 @@ if __name__ == "__main__":
 
     # Options
     options = {
-        "generations": 1000,  # Max. number of generations
+        "generations": 500,  # Max. number of generations
         "pop_size": 300,  # Population size
         "tol": 1e-3,  # Solution tolerance
     }

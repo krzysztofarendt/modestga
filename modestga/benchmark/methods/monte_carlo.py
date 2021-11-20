@@ -41,7 +41,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}):
         "generations": 1000,  # Max. number of generations
         "pop_size": 100,  # Population size
         "tol": 1e-3,  # Solution tolerance
-        "inertia": 1000,  # Max. number of non-improving generations
+        "inertia": 10000,  # Max. number of non-improving generations
     }
 
     for k in options:
