@@ -172,7 +172,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}, workers=N
             pipes.append(pipe_to)
 
     # Initialize population
-    pop = population.Population(opts["pop_size"], bounds, fun, args=args, evaluate=True)
+    pop = population.Population(opts["pop_size"], bounds, fun, args=args, evaluate=False)
     nfev += len(pop.ind)
 
     # Add user guess if present
@@ -205,6 +205,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}, workers=N
         # Fill other slots with children
         if not parallel:
             # Single process
+            pop.evaluate()
 
             # Initialize children
             children = list()
@@ -236,7 +237,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}, workers=N
 
             # Divide genes among subpopulation
             all_genes = pop.get_genes()
-            all_fx = pop.get_fx()
+            all_fx = [None for x in range(opts["pop_size"])]  # Dummy fx
             subpop_genes = list()
             subpop_fx = list()
             for i in range(workers):
