@@ -236,22 +236,17 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}, workers=N
 
             # Divide genes among subpopulation
             all_genes = pop.get_genes()
-            all_fx = [None for x in range(opts["pop_size"])]  # Dummy fx
             subpop_genes = list()
-            subpop_fx = list()
             for i in range(workers):
                 subpop_genes.append(list())
-                subpop_fx.append(list())
                 for j in range(subpop_size):
                     subpop_genes[i].append(all_genes[i * subpop_size + j])
-                    subpop_fx[i].append(all_fx[i * subpop_size + j])
 
             # Send data to workers
             for i in range(workers):
                 data_to.append(dict())
                 data_to[i]["scale"] = scale
                 data_to[i]["genes"] = subpop_genes[i]
-                data_to[i]["fx"] = subpop_fx[i]
                 pipes[i].send(data_to[i])
 
             # Receive data from workers
