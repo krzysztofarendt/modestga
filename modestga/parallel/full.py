@@ -40,7 +40,7 @@ def parallel_pop(
                 break
             scale = data["scale"]
             pop.set_genes(data["genes"])
-            pop.set_fx(data["fx"])
+            pop.evaluate()
 
             # Generate children
             children = list()

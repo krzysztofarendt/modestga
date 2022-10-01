@@ -30,6 +30,10 @@ class Population:
                 )
             )
 
+    def evaluate(self):
+        for ind in self.ind:
+            ind.evaluate()
+
     def set_genes(self, genes):
         for i, g in enumerate(genes):
             self.ind[i].gen = g
