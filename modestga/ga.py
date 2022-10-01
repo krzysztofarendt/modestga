@@ -179,9 +179,8 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}, workers=N
     if x0 is not None:
         x0 = np.array(x0)
         pop.ind[0] = individual.Individual(
-            genes=norm(x0, bounds), bounds=bounds, fun=fun, args=args
+            genes=norm(x0, bounds), bounds=bounds, fun=fun, args=args, val=np.inf
         )
-        nfev += 1
 
     # Loop over generations
     ng = 0
