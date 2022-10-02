@@ -18,7 +18,7 @@ con_minimize(fun, bounds, constr, x0=None, args=(), callback=None, options={}, w
 - adaptive mutation,
 - suitable for large-scale non-convex problems,
 - pure Python,
-- continuous testing on latest Ubuntu and Python 3.7, 3.8, 3.9, but should work also on other distros and on Windows.
+- continuous testing on latest Ubuntu and Python 3.7-3.10 but should work also on other distros and on Windows.
 
 Two functions are available:
 - `modestga.minimize()` for minimization with simple rectangular bounds on parameters,
