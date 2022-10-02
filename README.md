@@ -50,9 +50,21 @@ pip install -e .
 ```
 
 ## Test
-Clone repository and run the example (50-dimensional [Rastrigin function](https://en.wikipedia.org/wiki/Rastrigin_function) minimization):
+Clone the repository and run:
+```
+pip install -e .
+pip install pytest
+pytest
+```
+
+You can also run some examples, e.g. optimization of the 50-dimensional [Rastrigin function](https://en.wikipedia.org/wiki/Rastrigin_function):
 ```
 python modestga/examples/min_rastrigin_fun.py
+```
+
+...or run all examples at once:
+```
+bin/run_examples.sh
 ```
 
 ## Example
