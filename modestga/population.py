@@ -17,7 +17,7 @@ class Population:
         if evaluate is True:
             val = None
         else:
-            val = np.nan
+            val = np.inf
 
         for i in range(size):
             self.ind.append(
