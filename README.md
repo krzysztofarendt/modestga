@@ -18,7 +18,7 @@ con_minimize(fun, bounds, constr, x0=None, args=(), callback=None, options={}, w
 - adaptive mutation,
 - suitable for large-scale non-convex problems,
 - pure Python,
-- continuous testing on latest Ubuntu and Python 3.7, 3.8, 3.9, but should work also on other distros and on Windows.
+- continuous testing on latest Ubuntu and Python 3.7-3.10 but should work also on other distros and on Windows.
 
 Two functions are available:
 - `modestga.minimize()` for minimization with simple rectangular bounds on parameters,
@@ -50,9 +50,21 @@ pip install -e .
 ```
 
 ## Test
-Clone repository and run the example (50-dimensional [Rastrigin function](https://en.wikipedia.org/wiki/Rastrigin_function) minimization):
+Clone the repository and run:
+```
+pip install -e .
+pip install pytest
+pytest
+```
+
+You can also run some examples, e.g. optimization of the 50-dimensional [Rastrigin function](https://en.wikipedia.org/wiki/Rastrigin_function):
 ```
 python modestga/examples/min_rastrigin_fun.py
+```
+
+...or run all examples at once:
+```
+bin/run_examples.sh
 ```
 
 ## Example
