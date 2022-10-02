@@ -17,7 +17,7 @@ class Population:
         if evaluate is True:
             val = None
         else:
-            val = np.nan
+            val = np.inf
 
         for i in range(size):
             self.ind.append(
@@ -29,6 +29,10 @@ class Population:
                     val=val,
                 )
             )
+
+    def evaluate(self):
+        for ind in self.ind:
+            ind.evaluate()
 
     def set_genes(self, genes):
         for i, g in enumerate(genes):

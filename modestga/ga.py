@@ -172,16 +172,15 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}, workers=N
             pipes.append(pipe_to)
 
     # Initialize population
-    pop = population.Population(opts["pop_size"], bounds, fun, args=args, evaluate=True)
+    pop = population.Population(opts["pop_size"], bounds, fun, args=args, evaluate=False)
     nfev += len(pop.ind)
 
     # Add user guess if present
     if x0 is not None:
         x0 = np.array(x0)
         pop.ind[0] = individual.Individual(
-            genes=norm(x0, bounds), bounds=bounds, fun=fun, args=args
+            genes=norm(x0, bounds), bounds=bounds, fun=fun, args=args, val=np.inf
         )
-        nfev += 1
 
     # Loop over generations
     ng = 0
@@ -205,6 +204,7 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}, workers=N
         # Fill other slots with children
         if not parallel:
             # Single process
+            pop.evaluate()
 
             # Initialize children
             children = list()
@@ -236,22 +236,17 @@ def minimize(fun, bounds, x0=None, args=(), callback=None, options={}, workers=N
 
             # Divide genes among subpopulation
             all_genes = pop.get_genes()
-            all_fx = pop.get_fx()
             subpop_genes = list()
-            subpop_fx = list()
             for i in range(workers):
                 subpop_genes.append(list())
-                subpop_fx.append(list())
                 for j in range(subpop_size):
                     subpop_genes[i].append(all_genes[i * subpop_size + j])
-                    subpop_fx[i].append(all_fx[i * subpop_size + j])
 
             # Send data to workers
             for i in range(workers):
                 data_to.append(dict())
                 data_to[i]["scale"] = scale
                 data_to[i]["genes"] = subpop_genes[i]
-                data_to[i]["fx"] = subpop_fx[i]
                 pipes[i].send(data_to[i])
 
             # Receive data from workers

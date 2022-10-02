@@ -66,9 +66,15 @@ class Individual:
         try:
             self.val = self.fun(self.get_estimates(), *self.args)
         except Exception as e:
+            # Catch exception but do not stop, because sometimes
+            # it is simply because the optimized function cannot work
+            # with some parameters. We choose to avoid such parameters
+            # in the future.
+            print("Exception in", self)
             print(e)
+            self.log.warning(f"Exception in {self}")
             self.log.warning(str(e))
-            self.val = 1e8  # Very large value
+            self.val = 1e8  # Very large value to avoid such genes in the future
         return self.val
 
     def copy(self):
