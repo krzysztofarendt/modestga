@@ -3,7 +3,7 @@
 Parallel optimization method vs. 1 process method.
 This test will print a summary similar to the ones below:
 
-    1. Result for constant population size (irrespectively on the number of workers):
+    1. Result for constant population size (irrespectively of the number of workers):
 
     SUMMARY:
     ========
